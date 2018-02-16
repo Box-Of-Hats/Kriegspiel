@@ -74,7 +74,7 @@ class Pawn(ChessPiece):
         self.name = "Pawn"
         self.symbols = {0: "♙", 1: "♟"}
         self.letters = {0: "P", 1: "p"}
-        self.moves = {0: [(0,0), (-1,0)], 1: [(0,0), (1,0)]}
+        self.moves = {0: [(0,0), (0,-1)], 1: [(0,0), (0,1)]}
         super().__init__(*args, **kwargs)
 
 class King(ChessPiece):

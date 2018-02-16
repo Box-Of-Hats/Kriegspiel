@@ -10,13 +10,16 @@ class Board():
         self.board[loc_x][loc_y] = piece
 
     def get_piece(self, loc):
-        return self.board[loc[0]][loc[1]]
+        #return self.board[loc[0]][loc[1]]
+        return self.board[loc[1]][loc[0]]
 
     def get_owner_of_piece(self, loc):
-        return self.board[loc[0]][loc[1]].owner_id
+        #return self.board[loc[0]][loc[1]].owner_id
+        return self.board[loc[1]][loc[0]].owner_id
 
     def cell_is_free(self, loc):
-        return self.board[loc[0]][loc[1]] == 0
+        #return self.board[loc[0]][loc[1]] == 0
+        return self.board[loc[1]][loc[0]] == 0
     
     def move_piece(self, _from, to, replace_from_with=0):
         """
@@ -25,8 +28,10 @@ class Board():
         "To" cell gets replaced by the "from" contents.
         No checks are made as to whether the move is legal.
         """
-        self.board[to[0]][to[1]] = self.board[_from[0]][_from[1]]
-        self.board[_from[0]][_from[1]] = replace_from_with
+        #self.board[to[0]][to[1]] = self.board[_from[0]][_from[1]]
+        #self.board[_from[0]][_from[1]] = replace_from_with
+        self.board[to[1]][to[0]] = self.board[_from[1]][_from[0]]
+        self.board[_from[1]][_from[0]] = replace_from_with
 
     def print_board(self, show_key=False):
         """

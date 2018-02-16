@@ -53,16 +53,16 @@ class Chess():
         Move a piece from one cell to another.
         TODO: Add checks for if a move is legal
         """
-        try:
-            if not self.is_legal_move(_from, _to, player_id):
-                print("Illegal Move.")
-                return False
-
-            moving_piece = self.board.get_piece(_from)
-            self.board.move_piece(_from, _to)
-            return True
-        except:
+        #try:
+        if not self.is_legal_move(_from, _to, player_id):
+            print("Illegal Move.")
             return False
+
+        moving_piece = self.board.get_piece(_from)
+        self.board.move_piece(_from, _to)
+        return True
+        #except:
+        #    return False
 
     def is_legal_move(self, _from, _to, player_id):
         moving_piece = self.board.get_piece(_from)
@@ -81,16 +81,16 @@ class Chess():
         #If piece can't jump, are all cells between _from and _to cells free?
 
         #TODO: MAKE THIS WORK! Currently nothing I've tried actually works
-        m = (_to[1] - _from[1])/(_to[0] - _from[0])
-        x , y = _to
-        c = y + (m*x)
-        print("m={}".format(m))
-        print("c={}".format(c))
-        print("y = {m}x + {c}".format(m=m, c=c))
-        x_points = list(range(_from[1], _to[0]-_from[1]))
-        y_points = [(m*i)+c for i in x_points]
-        print("x_points={}".format(x_points))
-        print("y_points={yp}, (calculated with: y={m}x + {c})".format(yp=y_points, m=m, c=c))
+        #m = (_to[1] - _from[1])/(_to[0] - _from[0])
+        #x , y = _to
+        #c = y + (m*x)
+        #print("m={}".format(m))
+        #print("c={}".format(c))
+        #print("y = {m}x + {c}".format(m=m, c=c))
+        #x_points = list(range(_from[1], _to[0]-_from[1]))
+        #y_points = [(m*i)+c for i in x_points]
+        #print("x_points={}".format(x_points))
+        #print("y_points={yp}, (calculated with: y={m}x + {c})".format(yp=y_points, m=m, c=c))
 
         
         not_blocked = True
@@ -107,7 +107,10 @@ class Chess():
                         break
         """
 
-
+        print("In move space: {}".format(in_move_space))
+        print("Space not occupied by own piece: {}".format(not_moving_onto_own_piece))
+        print("Is own piece: {}".format(is_own_piece))
+        print("Path not blocked: {}".format(not_blocked))
         return in_move_space and not_moving_onto_own_piece and is_own_piece and not_blocked
 
     def user_prompt(self):
@@ -132,7 +135,7 @@ class Chess():
         #move = _from, _to = current_player.do_move(self.get_board_for_player(current_player))
         valid_move = False
         while not valid_move:
-            move = _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
+            _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
             valid_move = self.move_piece(_from, _to, player_id=self.last_move)
 
     def get_board_for_player(self, player_id):

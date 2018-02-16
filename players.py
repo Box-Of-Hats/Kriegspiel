@@ -22,8 +22,8 @@ class HumanPlayer(Player):
         in_string = input(">")
 
         _from, _to = in_string.split(" ")
-        from_cell = (row_conversion[_from[1]], col_conversion[_from[0]])
-        to_cell = (row_conversion[_to[1]], col_conversion[_to[0]])
+        from_cell = (col_conversion[_from[0]], row_conversion[_from[1]])
+        to_cell = (col_conversion[_to[0]], row_conversion[_to[1]])
         print("You want to move from {} to {}".format(from_cell, to_cell))
         return (from_cell, to_cell)
 
