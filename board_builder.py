@@ -1,6 +1,6 @@
 from tkinter import *
 from pieces import PieceFactory
-from easygui import filesavebox
+from easygui import filesavebox, ccbox
 """
 This has some incredibly questionable OO programming.
 This was created in about an hour just as a quick tool.
@@ -24,7 +24,7 @@ class BoardBuilder():
         self.matrix = [[0 for x in range(8)] for y in range(8)]
         self.button_matrix = [[0 for x in range(8)] for y in range(8)]
 
-        self.piece_symbols = {}
+        self.piece_symbols = {"0": ""}
 
         black_pieces = list("prnbkq")
         white_pieces = list("PRNBKQ")
@@ -64,6 +64,8 @@ class BoardBuilder():
                             variable=self.current_piece, value=piece, font=font_choice)
             b.grid(row=r, column=1)
 
+        Radiobutton(piece_frame, text="␡", variable=self.current_piece, value="0", font=font_choice).grid(row=8, column=0)
+
         Button(piece_frame, text="Save", command= lambda: self.save_matrix(filesavebox(default='.\\*.txt')), font=font_choice, relief="groove").grid(row=10, column=0, columnspan=2)
         Button(piece_frame, text="Clear", command= lambda: self.clear(), font=("Courier", 10), relief="groove").grid(row=11, column=0, columnspan=2,)
 
@@ -73,19 +75,23 @@ class BoardBuilder():
         self.matrix[i][j] = self.current_piece.get()
         self.button_matrix[i][j].config(text=self.piece_symbols[self.current_piece.get()])
 
-    def save_matrix(self, fname):
-        with open(fname, "w") as f:
-            for row in self.matrix:
-                for cell in row:
-                    f.write(str(cell))
-                f.write("\n")
-        print("Saved layout to: {}".format(fname))
-
+    def save_matrix(self, fname=None):
+        if fname:
+            with open(fname, "w") as f:
+                for row in self.matrix:
+                    for cell in row:
+                        f.write(str(cell))
+                    f.write("\n")
+            print("Saved layout to: {}".format(fname))
+        else:
+            return False
+        
     def clear(self):
-        self.matrix = [[0 for x in range(8)] for y in range(8)]
-        for row in self.button_matrix:
-            for b in row:
-                b.config(text="")
+        if ccbox("Clear?", "Confirm you wish to clear", choices=("sure", "nah")):
+            self.matrix = [[0 for x in range(8)] for y in range(8)]
+            for row in self.button_matrix:
+                for b in row:
+                    b.config(text="")
 
 if __name__ == "__main__":
     b = BoardBuilder()
