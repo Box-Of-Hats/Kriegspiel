@@ -79,39 +79,51 @@ class Chess():
         #Is the piece being moved belonging to the player trying to move it?
         is_own_piece = self.board.get_owner_of_piece(_from) == player_id
         #If piece can't jump, are all cells between _from and _to cells free?
-
-        #TODO: MAKE THIS WORK! Currently nothing I've tried actually works
-        #m = (_to[1] - _from[1])/(_to[0] - _from[0])
-        #x , y = _to
-        #c = y + (m*x)
-        #print("m={}".format(m))
-        #print("c={}".format(c))
-        #print("y = {m}x + {c}".format(m=m, c=c))
-        #x_points = list(range(_from[1], _to[0]-_from[1]))
-        #y_points = [(m*i)+c for i in x_points]
-        #print("x_points={}".format(x_points))
-        #print("y_points={yp}, (calculated with: y={m}x + {c})".format(yp=y_points, m=m, c=c))
-
-        
-        not_blocked = True
-        """
+        path_is_clear = True
         if not moving_piece.can_jump:
-            x_diff = abs(_to[0] - _from[0])
-            y_diff = abs(_to[1] - _from[1])
-            print(x_diff, y_diff)
-            if x_diff == y_diff:
-                for i in range(0, x_diff):
-                    print("Is cell free? ({},{}): {}".format(i,i, self.board.cell_is_free((i, i))))
-                    if not self.board.cell_is_free((i, i)):
-                        not_blocked = False
-                        break
-        """
+            if _from[1] > _to[1]:
+                y_range = list(range(_from[1], _to[1], -1))
+            else:
+                y_range = list(range(_from[1], _to[1]))
 
-        print("In move space: {}".format(in_move_space))
-        print("Space not occupied by own piece: {}".format(not_moving_onto_own_piece))
-        print("Is own piece: {}".format(is_own_piece))
-        print("Path not blocked: {}".format(not_blocked))
-        return in_move_space and not_moving_onto_own_piece and is_own_piece and not_blocked
+            if _from[0] > _to[0]:
+                x_range = list(range(_from[0], _to[0], -1))
+            else:
+                x_range = list(range(_from[0], _to[0]))
+    
+            #If move is diagonal:
+            if abs(_to[0] - _from[0]) == abs(_to[1] - _from[1]):
+                cells_to_check = list(zip(x_range, y_range))
+                #Dont check current position:
+                if _from in cells_to_check:
+                    cells_to_check.remove(_from)
+            #If move is vertical:
+            elif _from[0] == _to[0]:
+                x_range = [_from[0]]*len(y_range)
+                cells_to_check = list(zip(x_range, y_range))
+                if _from in cells_to_check:
+                    cells_to_check.remove(_from)
+            #If move is horizontal:
+            elif _from[1] == _to[1]:
+                y_range = [_from[1]]*len(x_range)
+                cells_to_check = list(zip(x_range, y_range))
+                if _from in cells_to_check:
+                    cells_to_check.remove(_from)
+            else:
+                print("Something went wrong with checking if the path was clear! >:c ")
+                
+        for i,j in cells_to_check:
+            #print("Is cell free? ({},{}): {}".format(i,j, self.board.cell_is_free((i, j))))
+            if not self.board.cell_is_free((i, j)):
+                path_is_clear = False
+                break
+
+        print("Check rules:")
+        print("\tIn move space: {}".format(in_move_space))
+        print("\tNot taking own piece: {}".format(not_moving_onto_own_piece))
+        print("\tIs own piece: {}".format(is_own_piece))
+        print("\tPath is clear: {}".format(path_is_clear))
+        return in_move_space and not_moving_onto_own_piece and is_own_piece and path_is_clear
 
     def user_prompt(self):
         """
