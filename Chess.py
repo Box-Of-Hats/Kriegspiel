@@ -3,6 +3,20 @@ from Board import Board
 from players import HumanPlayer, RandomPlayer
 import argparse
 
+"""
+Misc:
+TODO: Implement random moving opponent
+Chess Implementation:
+TODO: Implement Pawn taking diagonally only
+TODO: Implement Winning/Losing via check
+Kriegspiel:
+TODO: Implement Referee
+Smart thing:
+TODO: Implement Analyser
+
+"""
+
+
 DEFAULT_LAYOUT = ["rnbqkbnr".upper(), "pppppppp".upper(), [0]*8, [0]*8, [0]*8, [0]*8, "pppppppp", "rnbqkbnr"]
 
 [int(i) for i in list("00000000")]
@@ -17,7 +31,7 @@ class Chess():
         self.players = {0: player_1,
                         1: player_2}
         self.use_symbols = use_symbols
-        self.last_move = 0 #Who's move it was last
+        self.last_move = 1 #Who's move it was last
         if not board_layout:
             #If no board layout specified, load default starting chess board
             self.load_game(DEFAULT_LAYOUT)
@@ -53,33 +67,37 @@ class Chess():
         Move a piece from one cell to another.
         TODO: Add checks for if a move is legal
         """
-        #try:
         if not self.is_legal_move(_from, _to, player_id):
             print("Illegal Move.")
             return False
 
         moving_piece = self.board.get_piece(_from)
         self.board.move_piece(_from, _to)
+        moving_piece.move_counter += 1
         return True
-        #except:
-        #    return False
 
     def is_legal_move(self, _from, _to, player_id):
         moving_piece = self.board.get_piece(_from)
         #Is there a piece in the _from cell?
         if not isinstance(moving_piece, ChessPiece):
+            print("No piece in cell {}".format(_from))
             return False
         #Is the move in the piece's movespace?
-        in_move_space = moving_piece.is_legal_transform(_from, _to)
+        if not moving_piece.is_legal_transform(_from, _to):
+            print("Not a valid move for piece: {}".format(moving_piece))
+            return False
         #If there is a piece on the _to cell, is it the other players?
         if self.board.get_piece(_to) != 0:
-            not_moving_onto_own_piece = self.board.get_owner_of_piece(_from) != self.board.get_owner_of_piece(_to)
-        else:
-            not_moving_onto_own_piece = True
+            if not self.board.get_owner_of_piece(_from) != self.board.get_owner_of_piece(_to):
+                print("Piece in {} belongs to opponent.".format(_to))
+                return False
         #Is the piece being moved belonging to the player trying to move it?
-        is_own_piece = self.board.get_owner_of_piece(_from) == player_id
+        if not self.board.get_owner_of_piece(_from) == player_id:
+            print("Trying to move opponents piece.")
+            return False
         #If piece can't jump, are all cells between _from and _to cells free?
         path_is_clear = True
+        print("{}, can jump: {}".format(moving_piece, moving_piece.can_jump))
         if not moving_piece.can_jump:
             if _from[1] > _to[1]:
                 y_range = list(range(_from[1], _to[1], -1))
@@ -110,20 +128,22 @@ class Chess():
                 if _from in cells_to_check:
                     cells_to_check.remove(_from)
             else:
+                cells_to_check = [(None, None)]
                 print("Something went wrong with checking if the path was clear! >:c ")
+                print("Debug:")
+                print("\tFrom: {f} , To: {t} , Player: {p}".format(f=_from, t=_to, p=player_id))
                 
-        for i,j in cells_to_check:
-            #print("Is cell free? ({},{}): {}".format(i,j, self.board.cell_is_free((i, j))))
-            if not self.board.cell_is_free((i, j)):
-                path_is_clear = False
-                break
+            for i,j in cells_to_check:
+                #print("Is cell free? ({},{}): {}".format(i,j, self.board.cell_is_free((i, j))))
+                if not self.board.cell_is_free((i, j)):
+                    return False
 
-        print("Check rules:")
-        print("\tIn move space: {}".format(in_move_space))
-        print("\tNot taking own piece: {}".format(not_moving_onto_own_piece))
-        print("\tIs own piece: {}".format(is_own_piece))
-        print("\tPath is clear: {}".format(path_is_clear))
-        return in_move_space and not_moving_onto_own_piece and is_own_piece and path_is_clear
+        #print("Check rules:")
+        #print("\tIn move space: {}".format(in_move_space))
+        #print("\tNot taking own piece: {}".format(not_moving_onto_own_piece))
+        #print("\tIs own piece: {}".format(is_own_piece))
+        #print("\tPath is clear: {}".format(path_is_clear))
+        return True
 
     def user_prompt(self):
         """
@@ -143,8 +163,11 @@ class Chess():
     def do_move(self):
         self.last_move = (self.last_move + 1) % 2
         current_player_id = self.last_move
+        
         current_player = self.players[self.last_move]
-        #move = _from, _to = current_player.do_move(self.get_board_for_player(current_player))
+
+        print("\nIt's {name}'s (ID: {id}) turn to make a move.".format(name=current_player.name, id=current_player_id))
+
         valid_move = False
         while not valid_move:
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
@@ -172,7 +195,7 @@ if __name__ == "__main__":
         use_symbols = False
 
     p1 = HumanPlayer(name="Jake")
-    p2 = HumanPlayer(name="Bob")
+    p2 = HumanPlayer(name="Robot Bob")
 
 
     parser = argparse.ArgumentParser()
@@ -190,6 +213,6 @@ if __name__ == "__main__":
 
 
     while True:
+        print("Full board:")
         c.print_board(show_key=True)
-        print("It's {name}'s (ID: {id}) turn to make a move.".format(name=c.players[c.last_move].name, id=c.last_move))
         c.do_move()

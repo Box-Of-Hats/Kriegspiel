@@ -1,9 +1,9 @@
 from tkinter import *
 from pieces import PieceFactory
-from easygui import filesavebox, ccbox
+from easygui import filesavebox
 """
 This has some incredibly questionable OO programming.
-This was created in about an hour just as a quick tool.
+This was created as a quick and dirty tool.
 Proceed with caution...
 """
 
@@ -12,6 +12,7 @@ class BoardBuilder():
         #Set up frames
         root = Tk()
         root.title("Board Builder")
+        root.resizable(width=False, height=False)
         app_window = Frame(root)
         app_window.grid(column=0, row=0)
         board_frame = Frame(app_window)
@@ -66,7 +67,7 @@ class BoardBuilder():
 
         Radiobutton(piece_frame, text="␡", variable=self.current_piece, value="0", font=font_choice).grid(row=8, column=0)
 
-        Button(piece_frame, text="Save", command= lambda: self.save_matrix(filesavebox(default='.\\*.txt')), font=font_choice, relief="groove").grid(row=10, column=0, columnspan=2)
+        Button(piece_frame, text="Save", command= lambda: self.save_matrix(filesavebox(default='.\\*.lyt')), font=font_choice, relief="groove").grid(row=10, column=0, columnspan=2)
         Button(piece_frame, text="Clear", command= lambda: self.clear(), font=("Courier", 10), relief="groove").grid(row=11, column=0, columnspan=2,)
 
         root.mainloop()
@@ -87,11 +88,10 @@ class BoardBuilder():
             return False
         
     def clear(self):
-        if ccbox("Clear?", "Confirm you wish to clear", choices=("sure", "nah")):
-            self.matrix = [[0 for x in range(8)] for y in range(8)]
-            for row in self.button_matrix:
-                for b in row:
-                    b.config(text="")
+        self.matrix = [[0 for x in range(8)] for y in range(8)]
+        for row in self.button_matrix:
+            for b in row:
+                b.config(text="")
 
 if __name__ == "__main__":
     b = BoardBuilder()

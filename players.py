@@ -1,4 +1,7 @@
 import itertools
+from pieces import ChessPiece
+import random
+from CheatAnalyser import CheatAnalyser
 
 class Player():
     def __init__(self, name=None):
@@ -13,6 +16,7 @@ class Player():
 
 class HumanPlayer(Player):
     def __init__(self, *args, **kwargs):
+        self.analyser = CheatAnalyser()
         super().__init__(*args, **kwargs)
 
     def do_move(self, board):
@@ -20,13 +24,39 @@ class HumanPlayer(Player):
         col_conversion = {a: b for a,b in zip(list("abcdefgh"),[0,1,2,3,4,5,6,7])}
         row_conversion = {a: b for a,b in zip(list("87654321"),[0,1,2,3,4,5,6,7])}
         in_string = input(">")
-
-        _from, _to = in_string.split(" ")
-        from_cell = (col_conversion[_from[0]], row_conversion[_from[1]])
-        to_cell = (col_conversion[_to[0]], row_conversion[_to[1]])
+        #Handle user input and potential errors if the format is incorrect:
+        try:
+            _from, _to = in_string.split(" ")
+        except ValueError:
+            print("Invalid input!")
+            print("\tMust be in format: [from_location] [to_location] (e.g 'a2 a3')")
+            return self.do_move(board)
+        try:
+            from_cell = (col_conversion[_from[0]], row_conversion[_from[1]])
+            to_cell = (col_conversion[_to[0]], row_conversion[_to[1]])
+        except KeyError:
+            print("Invalid move coordinates.")
+            print("\tMust be in range a1-h7")
+            return self.do_move(board)
         print("You want to move from {} to {}".format(from_cell, to_cell))
         return (from_cell, to_cell)
 
 class RandomPlayer(Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def do_move(self, board):
+        my_pieces = {}
+        for row_no, row in enumerate(board.board):
+            for col_no, cell in enumerate(row):
+                if isinstance(cell, ChessPiece):
+                    my_pieces[(col_no, row_no)] = cell
+
+        moving_piece_loc = random.choice([i for i in my_pieces])
+        moving_piece_type = my_pieces[moving_piece_loc]
+        random_move = random.choice(moving_piece_type.moves)
+        random_to = ((moving_piece_loc[0] + random_move[0]) %8, (moving_piece_loc[1] + random_move[1]) %8)
+        print(my_pieces)
+        print("Random move: {} -> {}".format(moving_piece_loc, random_to))
+        return (moving_piece_loc, random_to)
+        

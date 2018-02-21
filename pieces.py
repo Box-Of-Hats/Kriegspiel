@@ -42,18 +42,18 @@ class ChessPiece():
         self.owner_id = colour
         self.illegal_moves = [(0,0)]
         self.letter = self.letters[colour]
-        self.moved_counter = 0
+        self.move_counter = 0
         if use_symbol:
             self.symbol = self.symbols[colour]
         else:
             self.symbol = self.letters[colour]
 
-        if isinstance(self.moves, dict): #If moves are colour depenedant, moves should be a dict
-            self.moves = self.moves[colour]
+        if isinstance(self._moves, dict): #If moves are colour depenedant, moves should be a dict
+            self._moves = self._moves[colour]
         
         if not hasattr(self, "can_jump"):
             self.can_jump = False
-
+    
     def __str__(self):
         return self.symbol
     
@@ -68,21 +68,37 @@ class ChessPiece():
         x_transform = _from[0] - _to[0]
         y_transfrom = _from[1] - _to[1]
         return (x_transform, y_transfrom) in self.moves
+
+    def get_moves(self):
+        return self._moves
+
+    moves = property(get_moves)
+    
             
 class Pawn(ChessPiece):
     def __init__(self, *args, **kwargs):
         self.name = "Pawn"
         self.symbols = {0: "♙", 1: "♟"}
         self.letters = {0: "P", 1: "p"}
-        self.moves = {0: [(0,0), (0,-1)], 1: [(0,0), (0,1)]}
+        self._moves = {0: [(0,-1)], 1: [(0,1)]}
         super().__init__(*args, **kwargs)
 
+    def get_moves(self):
+        #Overwrite moves getter for pawn. Moves change depending on the situation
+        if self.move_counter == 0:
+            #Can move 2 if it is the pawn's first move
+            return self._moves + {0: [(0,-2)], 1: [(0,2)]}[self.owner_id]
+        else:
+            return self._moves
+    
+    moves = property(get_moves)
+    
 class King(ChessPiece):
     def __init__(self, *args, **kwargs):
         self.name = "King"
         self.symbols = {0: "♔", 1: "♚"}
         self.letters = {0: "K", 1: "k"}
-        self.moves = [combination for combination in itertools.product([0,-1,1], repeat=2)]
+        self._moves = [combination for combination in itertools.product([0,-1,1], repeat=2)]
         super().__init__(*args, **kwargs)
 
 class Queen(ChessPiece):
@@ -98,7 +114,7 @@ class Queen(ChessPiece):
         down_right = [(a,-a) for a in range(0,8)]
         up_left = [(-a,a) for a in range(0,8)]
         down_left = [(-a,-a) for a in range(0,8)]
-        self.moves = list(itertools.chain(up_right, down_right, up_left, down_left, down_moves, up_moves, right_moves, left_moves))
+        self._moves = list(itertools.chain(up_right, down_right, up_left, down_left, down_moves, up_moves, right_moves, left_moves))
 
         super().__init__(*args, **kwargs)
         
@@ -111,7 +127,7 @@ class Rook(ChessPiece):
         down_moves = [(0,i) for i in range(-8,0)]
         right_moves = [(i,0) for i in range(0,8)]
         left_moves = [(i,0) for i in range(-8, 0)]
-        self.moves = list(itertools.chain(down_moves, up_moves, right_moves, left_moves))
+        self._moves = list(itertools.chain(down_moves, up_moves, right_moves, left_moves))
         super().__init__(*args, **kwargs)
 
 class Knight(ChessPiece):
@@ -119,7 +135,7 @@ class Knight(ChessPiece):
         self.name = "Knight"
         self.symbols = {0: "♘", 1: "♞"}
         self.letters = {0: "N", 1: "n"}
-        self.moves = [(2, 1), (2, -1), (-2,1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
+        self._moves = [(2, 1), (2, -1), (-2,1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
         self.can_jump = True
         super().__init__(*args, **kwargs)
 
@@ -132,7 +148,7 @@ class Bishop(ChessPiece):
         down_right = [(a,-a) for a in range(0,8)]
         up_left = [(-a,a) for a in range(0,8)]
         down_left = [(-a,-a) for a in range(0,8)]
-        self.moves = list(itertools.chain(up_right, down_right, up_left, down_left))
+        self._moves = list(itertools.chain(up_right, down_right, up_left, down_left))
         super().__init__(*args, **kwargs)
 
 if __name__ == "__main__":
