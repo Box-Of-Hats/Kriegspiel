@@ -31,13 +31,16 @@ class HumanPlayer(Player):
             print("Invalid input!")
             print("\tMust be in format: [from_location] [to_location] (e.g 'a2 a3')")
             return self.do_move(board)
+
         try:
+            #Convert user input to numerical coordinates. a7 -> (0,1); a6 -> (0,2)...
             from_cell = (col_conversion[_from[0]], row_conversion[_from[1]])
             to_cell = (col_conversion[_to[0]], row_conversion[_to[1]])
         except KeyError:
             print("Invalid move coordinates.")
             print("\tMust be in range a1-h7")
             return self.do_move(board)
+            
         print("You want to move from {} to {}".format(from_cell, to_cell))
         return (from_cell, to_cell)
 

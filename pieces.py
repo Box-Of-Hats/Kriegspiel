@@ -78,7 +78,7 @@ class ChessPiece():
 class Pawn(ChessPiece):
     def __init__(self, *args, **kwargs):
         self.name = "Pawn"
-        self.symbols = {0: "♙", 1: "♟"}
+        self.symbols = {0: "♙", 1: chr(9823)}
         self.letters = {0: "P", 1: "p"}
         self._moves = {0: [(0,-1)], 1: [(0,1)]}
         super().__init__(*args, **kwargs)
