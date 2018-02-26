@@ -13,15 +13,20 @@ class Referee():
         if not isinstance(moving_piece, ChessPiece):
             print("No piece in cell {}".format(_from))
             return False
-        #Is the move in the piece's movespace?
-        if not moving_piece.is_legal_transform(_from, _to):
-            print("Not a valid move for piece: {}".format(moving_piece))
-            return False
         #If there is a piece on the _to cell, is it the other players?
         if self.game.board.get_piece(_to) != 0:
             if not self.game.board.get_owner_of_piece(_from) != self.game.board.get_owner_of_piece(_to):
                 print("Piece in {} belongs to opponent.".format(_to))
                 return False
+            #If there is a piece on the _to cell, is the move in the moving pieces attack movespace
+            if not moving_piece.is_legal_transform(_from, _to, attacking=True):
+                print("Not a valid attack move for piece: {}".format(moving_piece))
+                print("legal att moves: {}".format(moving_piece.attack_moves))
+                return False
+        #else, the space is free. -> Is the move in the piece's movespace?
+        elif not moving_piece.is_legal_transform(_from, _to):
+            print("Not a valid move for piece: {}".format(moving_piece))
+            return False
         #Is the piece being moved belonging to the player trying to move it?
         if not self.game.board.get_owner_of_piece(_from) == player_id:
             print("Trying to move opponents piece.")

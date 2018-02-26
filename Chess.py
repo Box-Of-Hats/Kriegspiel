@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from pieces import Pawn, Rook, Knight, Bishop, King, Queen, PieceFactory, ChessPiece
 from Board import Board
 from players import HumanPlayer, RandomPlayer
@@ -8,7 +11,6 @@ import argparse
 Misc:
 TODO: Implement random moving opponent
 Chess Implementation:
-TODO: Implement Pawn taking diagonally only
 TODO: Implement Winning/Losing via check
 Kriegspiel:
 TODO: Implement Referee
@@ -110,7 +112,7 @@ if __name__ == "__main__":
     #Check if terminal supports chess characters. Use lettering for characters if not.
     use_symbols = True
     try:
-        print(King().symbol, end="\r")
+        print(King().symbol,)
     except UnicodeEncodeError:
         use_symbols = False
     #Define players

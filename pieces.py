@@ -1,8 +1,10 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import itertools
 
 """
 TODO: Define legal transforms for all pieces
-Pawn    
+Pawn    ✔
 Rook    ✔
 Knight  ✔
 Bishop  ✔
@@ -53,6 +55,11 @@ class ChessPiece():
         
         if not hasattr(self, "can_jump"):
             self.can_jump = False
+
+        if not hasattr(self, "attack_moves"):
+            self.attack_moves = self.moves
+        else:
+            self.attack_moves = self.attack_moves[colour]
     
     def __str__(self):
         return self.symbol
@@ -60,14 +67,18 @@ class ChessPiece():
     def __repr__(self):
         return self.symbol
 
-    def is_legal_transform(self, _from, _to):
+    def is_legal_transform(self, _from, _to, attacking=False):
         """
         Check if a move transform is legal for that piece type.
         Only checks if the move is in the piece's movespace.
+        'attacking' refers to if the piece is attempting an attacking move. 
         """
         x_transform = _from[0] - _to[0]
         y_transfrom = _from[1] - _to[1]
-        return (x_transform, y_transfrom) in self.moves
+        if attacking:
+            return (x_transform, y_transfrom) in self.attack_moves
+        else:
+            return (x_transform, y_transfrom) in self.moves
 
     def get_moves(self):
         return self._moves
@@ -81,6 +92,7 @@ class Pawn(ChessPiece):
         self.symbols = {0: "♙", 1: chr(9823)}
         self.letters = {0: "P", 1: "p"}
         self._moves = {0: [(0,-1)], 1: [(0,1)]}
+        self.attack_moves = {0: [(1,-1), (-1, -1)], 1: [(1, 1), (-1, 1)] }
         super().__init__(*args, **kwargs)
 
     def get_moves(self):
