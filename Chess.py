@@ -11,9 +11,10 @@ import argparse
 Misc:
 TODO: Implement random moving opponent
 Chess Implementation:
-TODO: Implement Winning/Losing via check
+TODO: Implement deciding if a player is in check MATE
 Kriegspiel:
 TODO: Implement Referee
+TODO: Indicate what type of check a player is in
 Smart thing:
 TODO: Implement Analyser
 
@@ -107,6 +108,17 @@ class Chess():
                         board_copy.add_piece(r_no, c_no, cell)
 
         return board_copy
+
+    def get_pieces_for_player(self, player_id):
+        """
+        <Generator>
+        Get all of the pieces of a given player
+        """
+        for r_no, row in enumerate(self.board.board):
+            for c_no, cell in enumerate(row):
+                if isinstance(cell, ChessPiece):
+                    if cell.owner_id == player_id:
+                        yield cell
         
 if __name__ == "__main__":
     #Check if terminal supports chess characters. Use lettering for characters if not.
@@ -138,4 +150,6 @@ if __name__ == "__main__":
     while True:
         print("Full board:")
         c.print_board(show_key=True)
+        print("0: Is in check?: {}".format(c.referee.is_in_check(0)))
+        print("1: Is in check?: {}".format(c.referee.is_in_check(1)))
         c.do_move()

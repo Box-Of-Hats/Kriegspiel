@@ -1,4 +1,4 @@
-from pieces import ChessPiece
+from pieces import ChessPiece, King
 
 """
 This ref is fair and does not allow any cheating in the game.
@@ -6,6 +6,24 @@ This ref is fair and does not allow any cheating in the game.
 class Referee():
     def __init__(self,):
         pass
+
+    def is_in_check(self, player_id):
+        #Is a player in check?
+        board = self.game.board.board
+        attacking_pieces = {}
+        for row_no, row in enumerate(board):
+            for cell_no, cell in enumerate(row):
+                if isinstance(cell, King):
+                    if cell.owner_id == player_id:
+                        king_pos = (row_no, cell_no)
+                elif issubclass(type(cell), ChessPiece):
+                    if cell.owner_id != player_id:
+                        attacking_pieces[cell] = (row_no, cell_no)
+        
+        for piece in attacking_pieces:
+            if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
+                return True
+        return False
 
     def is_move_legal(self, _from, _to, player_id):
         moving_piece = self.game.board.get_piece(_from)
@@ -94,6 +112,8 @@ class CheatingReferee(Referee):
         self.cheating_player_id = cheating_player_id
 
     def is_move_legal(self, *args, **kwargs):
+        #Override is_move_legal method.
+        #Allows one player to cheat and uses the standard rules for the other player.
         if kwargs["player_id"] == self.cheating_player_id:
             return True
         else:
