@@ -132,7 +132,7 @@ if __name__ == "__main__":
     p2 = HumanPlayer(name="Cheating Bob")
     #Create referee
     #referee = Referee()
-    referee = CheatingReferee(cheating_player_id=1)
+    referee = Referee()
     #Parse any passed args:
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--layout_file", help="The filepath of the layout you wish to load.")
@@ -150,6 +150,6 @@ if __name__ == "__main__":
     while True:
         print("Full board:")
         c.print_board(show_key=True)
-        print("0: Is in check?: {}".format(c.referee.is_in_check(0)))
-        print("1: Is in check?: {}".format(c.referee.is_in_check(1)))
+        print("0: Is in check?: {}; mate: {}".format(c.referee.is_in_check(0), c.referee.is_in_check_mate(0)))
+        print("1: Is in check?: {}; mate: {}".format(c.referee.is_in_check(1), c.referee.is_in_check_mate(1)))
         c.do_move()
