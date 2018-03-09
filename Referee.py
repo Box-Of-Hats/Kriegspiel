@@ -6,7 +6,13 @@ This ref is fair and does not allow any cheating in the game.
 """
 class Referee():
     def __init__(self,):
-        pass
+        self.outputs = {
+            0: "Okay",
+            1: "Blocked",
+            2: "Piece taken",
+            3: "Check",
+            4: "Check mate",
+        }
 
     def is_in_check_mate(self, player_id, board=None):
         #Is a player in check?

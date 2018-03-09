@@ -11,9 +11,9 @@ import argparse
 Misc:
 TODO: Implement random moving opponent
 Chess Implementation:
-TODO: Implement deciding if a player is in check MATE
+TODO: Fix check/mate checking so that it works even with a cheating referee
 Kriegspiel:
-TODO: Implement Referee
+TODO: Implement Referee output
 TODO: Indicate what type of check a player is in
 Smart thing:
 TODO: Implement Analyser
