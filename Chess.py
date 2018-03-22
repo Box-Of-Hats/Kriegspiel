@@ -11,7 +11,7 @@ import argparse
 Misc:
 TODO: Implement random moving opponent
 Chess Implementation:
-TODO: Fix check/mate checking so that it works even with a cheating referee [Fixed]
+-
 Kriegspiel:
 TODO: Implement Referee output
 TODO: Indicate what type of check a player is in
@@ -22,8 +22,6 @@ TODO: Implement Analyser
 
 
 DEFAULT_LAYOUT = ["rnbqkbnr".upper(), "pppppppp".upper(), [0]*8, [0]*8, [0]*8, [0]*8, "pppppppp", "rnbqkbnr"]
-
-[int(i) for i in list("00000000")]
 
 class Chess():
     def __init__(self,  player_1, player_2, referee, board_layout=None, use_symbols=True,):
