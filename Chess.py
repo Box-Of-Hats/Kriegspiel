@@ -11,7 +11,7 @@ import argparse
 Misc:
 TODO: Implement random moving opponent
 Chess Implementation:
-TODO: Fix check/mate checking so that it works even with a cheating referee
+TODO: Fix check/mate checking so that it works even with a cheating referee [Fixed]
 Kriegspiel:
 TODO: Implement Referee output
 TODO: Indicate what type of check a player is in
@@ -130,12 +130,10 @@ if __name__ == "__main__":
     #Define players
     p1 = HumanPlayer(name="Jake")
     p2 = HumanPlayer(name="Cheating Bob")
-    #Create referee
-    #referee = Referee()
-    referee = Referee()
     #Parse any passed args:
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--layout_file", help="The filepath of the layout you wish to load.")
+    parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat p1, 2: cheat p2, 3: laxx")
     args = parser.parse_args()
 
     if args.layout_file:
@@ -143,6 +141,18 @@ if __name__ == "__main__":
             layout = layout_file.read().splitlines()
     else:
         layout = DEFAULT_LAYOUT
+        
+    referees = {
+        0: Referee(),
+        1: CheatingReferee(cheating_player_id=0),
+        2: CheatingReferee(cheating_player_id=1),
+        3: LaxxReferee(),
+    }
+    if args.referee:
+        referee = referees[int(args.referee)]
+    else:
+        referee = referees[0]
+
     #Initialise Chess game
     c = Chess(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols)
     c.load_game(layout)
@@ -150,6 +160,6 @@ if __name__ == "__main__":
     while True:
         print("Full board:")
         c.print_board(show_key=True)
-        print("0: Is in check?: {}; mate: {}".format(c.referee.is_in_check(0), c.referee.is_in_check_mate(0)))
-        print("1: Is in check?: {}; mate: {}".format(c.referee.is_in_check(1), c.referee.is_in_check_mate(1)))
+        #print("0: Is in check?: {}; mate: {}".format(c.referee.is_in_check(0), c.referee.is_in_check_mate(0)))
+        #print("1: Is in check?: {}; mate: {}".format(c.referee.is_in_check(1), c.referee.is_in_check_mate(1)))
         c.do_move()

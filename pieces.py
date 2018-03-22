@@ -2,17 +2,6 @@
 # -*- coding: utf-8 -*-
 import itertools
 
-"""
-TODO: Define legal transforms for all pieces
-Pawn    ✔
-Rook    ✔
-Knight  ✔
-Bishop  ✔
-King    ✔
-Queen   ✔
-
-"""
-
 class PieceFactory():
     def __init__(self):
         self.pieces = {
