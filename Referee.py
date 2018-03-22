@@ -1,4 +1,4 @@
-from pieces import ChessPiece, King
+from ChessPiece import ChessPiece, King
 from Board import Board
 
 """

@@ -1,5 +1,5 @@
 from tkinter import *
-from pieces import PieceFactory
+from ChessPiece import PieceFactory
 from easygui import filesavebox
 """
 This has some incredibly questionable OO programming.

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from pieces import Pawn, Rook, Knight, Bishop, King, Queen, PieceFactory, ChessPiece
+from ChessPiece import Pawn, Rook, Knight, Bishop, King, Queen, PieceFactory, ChessPiece
 from Board import Board
-from players import HumanPlayer, RandomPlayer
+from Player import HumanPlayer, RandomPlayer
 from Referee import * 
 import argparse
 

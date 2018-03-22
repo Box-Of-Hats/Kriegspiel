@@ -1,5 +1,5 @@
 import itertools
-from pieces import ChessPiece
+from ChessPiece import ChessPiece
 import random
 from CheatAnalyser import CheatAnalyser
 
