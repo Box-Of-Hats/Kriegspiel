@@ -133,7 +133,7 @@ if __name__ == "__main__":
     #Parse any passed args:
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--layout_file", help="The filepath of the layout you wish to load.")
-    parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat p1, 2: cheat p2, 3: laxx")
+    parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat w/p1, 2: cheat w/p2, 3: laxx")
     args = parser.parse_args()
 
     if args.layout_file:
