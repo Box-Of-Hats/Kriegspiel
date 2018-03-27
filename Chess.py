@@ -9,8 +9,7 @@ import argparse
 
 """
 Misc:
-TODO: Implement random moving opponent
-    -> Currently only ever moves knights...
+
 Chess Implementation:
 -
 Kriegspiel:

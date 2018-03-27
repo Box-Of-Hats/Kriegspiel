@@ -52,7 +52,7 @@ class BoardBuilder():
                     r= "raised"
                 else:
                     r = "flat"
-                t = Button(board_frame, height=1, width=2, command=lambda i=i,j=j: self.set_piece(i, j), font=font_choice, bg=cell_colours[cell_colour], relief=r, highlightbackground="green", highlightcolor="green", highlightthickness=1,)
+                t = Button(board_frame, height=1, width=2, command=lambda i=i,j=j: self.set_piece(i, j), font=font_choice, bg=cell_colours[cell_colour], relief=r)
                 t.grid(column=j, row=i)
                 self.button_matrix[i][j] = t
                 cell_colour = (cell_colour + 1) %2
