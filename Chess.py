@@ -125,39 +125,66 @@ if __name__ == "__main__":
         print(King().symbol,)
     except UnicodeEncodeError:
         use_symbols = False
+
+    referees = {
+        "fair": Referee(),
+        "0": CheatingReferee(cheating_player_id=0),
+        "1": CheatingReferee(cheating_player_id=1),
+        "laxx": LaxxReferee(),
+    }
+
     #Define players
     p1 = HumanPlayer(name="Jake")
     p2 = HumanPlayer(name="Cheating Bob")
     #Parse any passed args:
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--layout_file", help="The filepath of the layout you wish to load.")
-    parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat w/p1, 2: cheat w/p2, 3: laxx")
+    parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat w/p1, 2: cheat w/p2, 3: laxx", choices=sorted([x for x in referees]))
+    parser.add_argument("-g", "--gamemode", help="The game mode to use.", choices=["debug", "pvp"])
     args = parser.parse_args()
 
+    #Set the layout
     if args.layout_file:
         with open(args.layout_file) as layout_file:
             layout = layout_file.read().splitlines()
     else:
         layout = DEFAULT_LAYOUT
-        
-    referees = {
-        0: Referee(),
-        1: CheatingReferee(cheating_player_id=0),
-        2: CheatingReferee(cheating_player_id=1),
-        3: LaxxReferee(),
-    }
+
+    #Set the type of referee
     if args.referee:
         referee = referees[int(args.referee)]
     else:
-        referee = referees[0]
+        #If referee is not specified, use a fair referee
+        referee = referees["fair"]
+        
+    #Set the game mode
+    if args.gamemode:
+        gamemode = args.gamemode
+    else:
+        gamemode = "debug"
+
+    def pvp(c):
+        import os
+        while True:
+            c.do_move()
+            input("@{} Press enter once you've ready.".format(c.players[c.last_move].name))
+            os.system("cls")
+            input("Press enter when you're ready >")
+
+    def debug(c):
+        while True:
+            print("Full board:")
+            c.print_board(show_key=True)
+            c.do_move()
+
+    gamemodes = {"pvp": pvp,
+                "debug": debug,
+    }
 
     #Initialise Chess game
     c = Chess(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols)
     c.load_game(layout)
 
-    while True:
-        print("Full board:")
-        c.print_board(show_key=True)
-        #print("0: Is in check?: {}; mate: {}".format(c.referee.is_in_check(0), c.referee.is_in_check_mate(0)))
-        #print("1: Is in check?: {}; mate: {}".format(c.referee.is_in_check(1), c.referee.is_in_check_mate(1)))
-        c.do_move()
+    
+
+    gamemodes[gamemode](c)
