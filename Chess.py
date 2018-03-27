@@ -10,6 +10,7 @@ import argparse
 """
 Misc:
 TODO: Implement random moving opponent
+    -> Currently only ever moves knights...
 Chess Implementation:
 -
 Kriegspiel:
@@ -17,6 +18,9 @@ TODO: Implement Referee output
 TODO: Indicate what type of check a player is in
 Smart thing:
 TODO: Implement Analyser
+
+Extra:
+TODO: Add graphical prompt for user moves
 
 """
 
@@ -117,7 +121,26 @@ class Chess():
                 if isinstance(cell, ChessPiece):
                     if cell.owner_id == player_id:
                         yield cell
-        
+
+
+
+def pvp(c):
+    """Play chess in PVP mode."""
+    import os
+    while True:
+        c.do_move()
+        input("@{} Press enter once you've ready.".format(c.players[c.last_move].name))
+        os.system("cls")
+        input("Press enter when you're ready >")
+
+def debug(c):
+    """Play chess with debug mode enabled. Prints out entire board after each move."""
+    while True:
+        print("Full board:")
+        c.print_board(show_key=True)
+        c.do_move()
+
+                    
 if __name__ == "__main__":
     #Check if terminal supports chess characters. Use lettering for characters if not.
     use_symbols = True
@@ -133,15 +156,35 @@ if __name__ == "__main__":
         "laxx": LaxxReferee(),
     }
 
-    #Define players
-    p1 = HumanPlayer(name="Jake")
-    p2 = HumanPlayer(name="Cheating Bob")
+    player_types = {
+        "human": HumanPlayer,
+        "random": RandomPlayer,
+    }
+
+    game_modes = {
+        "pvp": pvp,
+        "debug": debug,
+    }
+
     #Parse any passed args:
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--layout_file", help="The filepath of the layout you wish to load.")
     parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat w/p1, 2: cheat w/p2, 3: laxx", choices=sorted([x for x in referees]))
-    parser.add_argument("-g", "--gamemode", help="The game mode to use.", choices=["debug", "pvp"])
+    parser.add_argument("-g", "--gamemode", help="The game mode to use.", choices=sorted([x for x in game_modes]))
+    parser.add_argument("-p1", "--player1", help="The type of player one.", choices=sorted([x for x in player_types]))
+    parser.add_argument("-p2", "--player2", help="The type of player two.", choices=sorted([x for x in player_types]))
     args = parser.parse_args()
+
+
+    #Set the players
+    if args.player1:
+        p1 = player_types[args.player1](name="Player 1")
+    else:
+        p1 = HumanPlayer(name="Jake") 
+    if args.player2:
+        p2 = player_types[args.player2](name="Player 2")
+    else:
+        p2 = HumanPlayer(name="Cheating Bob") 
 
     #Set the layout
     if args.layout_file:
@@ -163,28 +206,8 @@ if __name__ == "__main__":
     else:
         gamemode = "debug"
 
-    def pvp(c):
-        import os
-        while True:
-            c.do_move()
-            input("@{} Press enter once you've ready.".format(c.players[c.last_move].name))
-            os.system("cls")
-            input("Press enter when you're ready >")
-
-    def debug(c):
-        while True:
-            print("Full board:")
-            c.print_board(show_key=True)
-            c.do_move()
-
-    gamemodes = {"pvp": pvp,
-                "debug": debug,
-    }
-
     #Initialise Chess game
     c = Chess(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols)
     c.load_game(layout)
 
-    
-
-    gamemodes[gamemode](c)
+    game_modes[gamemode](c)

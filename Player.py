@@ -57,8 +57,8 @@ class RandomPlayer(Player):
 
         moving_piece_loc = random.choice([i for i in my_pieces])
         moving_piece_type = my_pieces[moving_piece_loc]
-        random_move = random.choice(moving_piece_type.moves)
-        random_to = ((moving_piece_loc[0] + random_move[0]) %8, (moving_piece_loc[1] + random_move[1]) %8)
+        random_move = random.choice(moving_piece_type.moves + moving_piece_type.attack_moves)
+        random_to = ((moving_piece_loc[0] - random_move[0]) %8, (moving_piece_loc[1] - random_move[1]) %8)
         print(my_pieces)
         print("Random move: {} -> {}".format(moving_piece_loc, random_to))
         return (moving_piece_loc, random_to)
