@@ -46,7 +46,13 @@ class BoardBuilder():
 
         for i in range(0,8):
             for j in range(0,8):
-                t = Button(board_frame, height=1, width=2, command=lambda i=i,j=j: self.set_piece(i, j), font=font_choice, bg=cell_colours[cell_colour], relief="flat")
+                if (i == 0 or i ==1):
+                    r = "sunken"
+                elif (i==6 or i == 7):
+                    r= "raised"
+                else:
+                    r = "flat"
+                t = Button(board_frame, height=1, width=2, command=lambda i=i,j=j: self.set_piece(i, j), font=font_choice, bg=cell_colours[cell_colour], relief=r, highlightbackground="green", highlightcolor="green", highlightthickness=1,)
                 t.grid(column=j, row=i)
                 self.button_matrix[i][j] = t
                 cell_colour = (cell_colour + 1) %2
