@@ -139,6 +139,10 @@ def debug(c):
         c.print_board(show_key=True)
         c.do_move()
 
+def testing(c):
+    #c.do_move()
+    c.referee.verify_move((0,0), (0,1), c.board, 0)
+
                     
 if __name__ == "__main__":
     #Check if terminal supports chess characters. Use lettering for characters if not.
@@ -163,6 +167,7 @@ if __name__ == "__main__":
     game_modes = {
         "pvp": pvp,
         "debug": debug,
+        "testing": testing,
     }
 
     #Parse any passed args:
@@ -210,3 +215,5 @@ if __name__ == "__main__":
     c.load_game(layout)
 
     game_modes[gamemode](c)
+    #c.do_move()
+    #referee.verify_move()

@@ -32,7 +32,7 @@ class ChessPiece():
     def __init__(self, use_symbol=True, colour=0):
         self.owner_id = colour
         self.illegal_moves = [(0,0)]
-        self.letter = self.letters[colour]
+        #self.letter = self.letters[colour] #Appears to be unused
         self.move_counter = 0
         if use_symbol:
             self.symbol = self.symbols[colour]

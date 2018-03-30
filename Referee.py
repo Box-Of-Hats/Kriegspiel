@@ -1,11 +1,18 @@
 from ChessPiece import ChessPiece, King
 from Board import Board
-
 """
 This ref is fair and does not allow any cheating in the game.
 """
 class Referee():
     def __init__(self,):
+
+
+        """
+        !!!
+        CHECK is currently same output, regardless of the type of check (long, diag etc.) and
+        regardless of who is in check. 
+        !!!
+        """
         self.outputs = {
             0: {"name": "Okay", "success": True},
             1: {"name": "Blocked", "success": False},
@@ -100,14 +107,41 @@ class Referee():
 
     def verify_move(self, _from, _to, board, player_id, echo=False):
         """
-        Take a move and return the relevant output.
+        Take a move and return the relevant referee output.
         """
-        #if self.is_move_legal(_from, _to, player_id, echo)):
-        #    return self.outputs
-        #new_board = Board(layout=board.board)
-        #new_board.
-        #if self.is_in_check_mate()
-        pass
+        #If the move was made, what would the board be?
+        next_board = Board()
+        next_board.load_board(board.board)
+        next_board.move_piece(_from, _to)
+        next_board.print_board(show_key=True)
+
+        #Move is not legal, return 'blocked'
+        if not self._is_move_legal(_from, _to, player_id, echo=echo):
+            return self.outputs[1]
+        #Move is legal:
+        #Move would put player in check
+        elif self.is_in_check(player_id, next_board):
+            return self.outputs[3]
+        #Would put other player in check
+        elif self.is_in_check((player_id +1) % 2, next_board):
+            return self.outputs[3]
+        #Would put player in check mate
+        elif self.is_in_check_mate(player_id, next_board):
+            return self.outputs[4]
+        #Would put other player in check mate
+        elif self.is_in_check_mate((player_id +1) % 2, next_board):
+            return self.outputs[4]
+        #Move is legal and a piece was taken:
+        elif True: #TODO: Add condition
+            return self.outputs[2]
+        #Move is legal:
+        elif True: #TODO Add condition
+            return self.outputs[0]
+        else:
+            raise Exception("Was verifying move but no conditions were met :/ :/ smh")
+
+        
+
 
     def is_in_check_mate(self, player_id, board=None):
         #Is a player in check?
