@@ -16,11 +16,15 @@ class Referee():
         !!!
         """
         self.outputs = {
-            0: {"name": "Okay", "success": True},
-            1: {"name": "Blocked", "success": False},
-            2: {"name": "Piece taken", "success": True},
-            3: {"name": "Check", "success": True},
-            4: {"name": "Check mate", "success": True},
+            0: Okay,
+            1: OkayTaken,
+            2: Blocked,
+            3: DiagonalCheck,
+            4: LongDiagonalCheck,
+            5: RowCheck,
+            6: ColumnCheck,
+            7: KnightCheck,
+            8: CheckMate,
         }
 
     def _is_move_legal(self, _from, _to, player_id, echo=True):

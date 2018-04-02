@@ -1,21 +1,16 @@
 """
-        self.outputs = {
-            0: {"name": "Okay", "success": True},
-            1: {"name": "Blocked", "success": False},
-            2: {"name": "Piece taken", "success": True},
-            3: {"name": "Check", "success": True},
-            4: {"name": "Check mate", "success": True},
-        }
+Define base classes of referee output
 """
 
 class RefereeOutput():
-    def __init__(self, for_player, *args, **kwargs):
+    def __init__(self, for_player, extra="", *args, **kwargs):
         self.label = None
         self.for_player = for_player
         self.success = None
+        self.extra = extra
 
     def __str__(self):
-        return "Player: {p} - {l}".format(p=self.for_player, l=self.label)
+        return "@{p} - {l} [{e}]".format(p=self.for_player, l=self.label, e=self.extra)
 
 class LegalMove(RefereeOutput):
     def __init__(self, *args, **kwargs):
@@ -28,19 +23,67 @@ class IllegalMove(RefereeOutput):
         self.success = False
 
 
+"""
+When a legal move is made
+"""
+
+class Okay(LegalMove):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "Move was legal."
+
+
+class OkayTaken(LegalMove):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "Move was legal and you took a piece."
+
+
+"""
+When an illegal move is attempted
+"""
 
 class Blocked(IllegalMove):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "Blocked"
         
+"""
+Check announcements
+"""
 
-class Check(LegalMove):
+class DiagonalCheck(RefereeOutput):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.label = "Check"
-        self.success = True
+        self.label = "You are in diagonal check."
+
+class LongDiagonalCheck(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "You are in long diagonal check."
+
+class KnightCheck(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "You are in check by a Knight."
+
+class RowCheck(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "You are in row-check."
+
+class ColumnCheck(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "You are in column-check."
+
+class CheckMate(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "You are in check mate."
 
 
-c = Check(for_player=2)
-print(c)
+
+
+output = CheckMate(for_player="Jake", extra="wow")
+print(output)
