@@ -126,10 +126,16 @@ class Chess():
 def pvp(c):
     """Play chess in PVP mode."""
     import os
+    #Ensure that correct console clearing command is in use, depending on the OS
+    if os.name == "nt":
+        clear_cmd = "cls"
+    else:
+        clear_cmd = "clear"
+
     while True:
         c.do_move()
         input("@{} Press enter once you've ready.".format(c.players[c.last_move].name))
-        os.system("cls")
+        os.system(clear_cmd)
         input("Press enter when you're ready >")
 
 def debug(c):
