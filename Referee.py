@@ -1,5 +1,7 @@
 from ChessPiece import ChessPiece, King
 from Board import Board
+from RefereeOutput import *
+
 """
 This ref is fair and does not allow any cheating in the game.
 """
