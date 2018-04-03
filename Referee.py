@@ -7,27 +7,18 @@ This ref is fair and does not allow any cheating in the game.
 """
 class Referee():
     def __init__(self,):
-
-
-        """
-        !!!
-        CHECK is currently same output, regardless of the type of check (long, diag etc.) and
-        regardless of who is in check. 
-        !!!
-        """
+        pass
 
     def _is_move_legal(self, _from, _to, player_id, echo=True):
         """
-        Actual is legal move check.
+        Actual is_legal_move check.
+        Only ever called privately.
         """
         moving_piece = self.game.board.get_piece(_from)
         #Is the _to location on the board?
-        #print("to: {}".format(_to))
         if ((_to[0] >= 8) or (_to[1] >= 8)):
-            #print("Hey wow, thats above 8")
             return False 
-        #else:
-        #print("Thats not above 8")
+
         #Is there a piece in the _from cell?
         if not isinstance(moving_piece, ChessPiece):
             if echo:
@@ -116,24 +107,28 @@ class Referee():
         #Move is not legal, return 'blocked'
         if not self._is_move_legal(_from, _to, player_id, echo=echo):
             return Blocked(for_player=player_name)
+
         #Move is legal:
         #Would put player in check mate
         elif self.is_in_check_mate(player_id, next_board.board):
             return CheckMate(for_player=player_name)
+
         #Would put other player in check mate
         elif self.is_in_check_mate((player_id +1) % 2, next_board.board):
             return CheckMate(for_player=(player_name+1)%2)
+
         #Move would put player in check
         elif self.is_in_check(player_id, next_board.board):
             return self.is_in_check(player_id, next_board.board)
-            #return ColumnCheck(for_player=player_name)
+
         #Would put other player in check
         elif self.is_in_check((player_id +1) % 2, next_board.board):
             return self.is_in_check((player_id +1) % 2, next_board.board)
-            #return ColumnCheck(for_player=(player_id +1) % 2)
+
         #Move is legal and a piece was taken:
         elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
             return OkayTaken(for_player=player_name)
+
         #Move is legal:
         else:
             return Okay(for_player=player_name)
@@ -156,12 +151,11 @@ class Referee():
             for move in list(set(piece.moves + piece.attack_moves)):
                 current_pos = defending_pieces[piece]
                 to_pos = (current_pos[0] + move[0], current_pos[1] + move[1])
-                #print("Checking {}: {}->{}".format(piece, current_pos, to_pos))
+
                 if self._is_move_legal(current_pos, to_pos, player_id=player_id, echo=False):
-                    #print("Legal move {}->{}".format(current_pos, to_pos))
+
                     temp_board = Board()
                     temp_board.load_board(board)
-                    #print("Move: {}->{}".format(current_pos, to_pos))
                     temp_board.move_piece(current_pos, to_pos)
                     if self.is_in_check(player_id, board=board):
                         return CheckMate(for_player=player_id)
