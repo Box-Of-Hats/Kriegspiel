@@ -15,8 +15,6 @@ class RefereeOutput():
             self.additional_text = "[{}]".format(additional_text)
 
     def __str__(self):
-        
-
         return "@{p} - {l} {e}".format(p=self.for_player, l=self.label, e=self.additional_text)
 
 class LegalMove(RefereeOutput):

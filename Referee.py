@@ -1,4 +1,4 @@
-from ChessPiece import ChessPiece, King
+from ChessPiece import ChessPiece, King, Knight
 from Board import Board
 from RefereeOutput import *
 
@@ -15,17 +15,6 @@ class Referee():
         regardless of who is in check. 
         !!!
         """
-        self.outputs = {
-            "okay": Okay,
-            "okay_taken": OkayTaken,
-            "blocked": Blocked,
-            "diag_check": DiagonalCheck,
-            "long_diag_check": LongDiagonalCheck,
-            "row_check": RowCheck,
-            "col_check": ColumnCheck,
-            "knight_check": KnightCheck,
-            "check_mate": CheckMate,
-        }
 
     def _is_move_legal(self, _from, _to, player_id, echo=True):
         """
@@ -126,30 +115,26 @@ class Referee():
 
         #Move is not legal, return 'blocked'
         if not self._is_move_legal(_from, _to, player_id, echo=echo):
-            return self.outputs["blocked"](for_player=player_name)
+            return Blocked(for_player=player_name)
         #Move is legal:
         #Would put player in check mate
         elif self.is_in_check_mate(player_id, next_board.board):
-            return self.outputs["check_mate"](for_player=player_name)
+            return CheckMate(for_player=player_name)
         #Would put other player in check mate
         elif self.is_in_check_mate((player_id +1) % 2, next_board.board):
-            return self.outputs["check_mate"](for_player=(player_id +1) % 2)
+            return CheckMate(for_player=(player_name+1)%2)
         #Move would put player in check
-        elif self.is_in_check(player_id, next_board.board):
-            return self.outputs["col_check"](for_player=player_name)
+        elif self.is_in_check(player_id, next_board.board):)
+            return ColumnCheck(for_player=player_name)
         #Would put other player in check
         elif self.is_in_check((player_id +1) % 2, next_board.board):
-            return self.outputs["col_check"](for_player=(player_id +1) % 2)
+            return ColumnCheck(for_player=(player_id +1) % 2)
         #Move is legal and a piece was taken:
         elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
-            return self.outputs["okay_taken"](for_player=player_name)
+            return OkayTaken(for_player=player_name)
         #Move is legal:
-        elif True: #TODO Add condition
-            return self.outputs["okay"](for_player=player_name)
         else:
-            raise Exception("Was verifying move but no conditions were met :/ :/ smh")
-
-        
+            return Okay(for_player=player_name)
 
 
     def is_in_check_mate(self, player_id, board=None):
@@ -194,7 +179,6 @@ class Referee():
         return not bool(king_pos)
 
 
-
     def is_in_check(self, player_id, board=None):
         #Is a player in check?
         #We do not yet know the position of the king:
@@ -218,8 +202,24 @@ class Referee():
         
         for piece in attacking_pieces:
             if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
+                #Is it an knight putting you in check?
+                if isinstance(piece, Knight):
+                    print("Knight check!!!!!!")
+                    return KnightCheck()
+
+                elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
+                    print("Row check!!!!!!")
+
+                elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
+                    print("Column check!!!!!!")
+                else:
+                    print("Diagonal check!!!!!!")
+
+
+
                 return True
         return False
+
     
     def is_move_legal(self, _from, _to, player_id, echo=True):
         return self._is_move_legal(_from, _to, player_id, echo=True)
