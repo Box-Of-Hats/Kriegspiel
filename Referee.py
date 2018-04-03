@@ -124,11 +124,13 @@ class Referee():
         elif self.is_in_check_mate((player_id +1) % 2, next_board.board):
             return CheckMate(for_player=(player_name+1)%2)
         #Move would put player in check
-        elif self.is_in_check(player_id, next_board.board):)
-            return ColumnCheck(for_player=player_name)
+        elif self.is_in_check(player_id, next_board.board):
+            return self.is_in_check(player_id, next_board.board)
+            #return ColumnCheck(for_player=player_name)
         #Would put other player in check
         elif self.is_in_check((player_id +1) % 2, next_board.board):
-            return ColumnCheck(for_player=(player_id +1) % 2)
+            return self.is_in_check((player_id +1) % 2, next_board.board)
+            #return ColumnCheck(for_player=(player_id +1) % 2)
         #Move is legal and a piece was taken:
         elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
             return OkayTaken(for_player=player_name)
@@ -139,6 +141,7 @@ class Referee():
 
     def is_in_check_mate(self, player_id, board=None):
         #Is a player in check?
+        #Returns CheckMate ref output if true. False otherwise
         if not board:
             board = self.game.board.board
         defending_pieces = {}
@@ -161,7 +164,7 @@ class Referee():
                     #print("Move: {}->{}".format(current_pos, to_pos))
                     temp_board.move_piece(current_pos, to_pos)
                     if self.is_in_check(player_id, board=board):
-                        return True
+                        return CheckMate(for_player=player_id)
         return False
     
 
@@ -198,26 +201,27 @@ class Referee():
 
         if not king_pos:
             #If there is no king on the board, return true.
-            return True
+            return GameOver(for_player=player_id)
         
         for piece in attacking_pieces:
             if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
                 #Is it an knight putting you in check?
                 if isinstance(piece, Knight):
                     print("Knight check!!!!!!")
-                    return KnightCheck()
+                    return KnightCheck(for_player=player_id)
 
                 elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
                     print("Row check!!!!!!")
+                    return RowCheck(for_player=player_id)
 
                 elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
-                    print("Column check!!!!!!")
+                    #print("Column check!!!!!!")
+                    return ColumnCheck(for_player=player_id)
                 else:
                     print("Diagonal check!!!!!!")
+                    return DiagonalCheck(for_player=player_id)
 
-
-
-                return True
+        #Player is not in check
         return False
 
     

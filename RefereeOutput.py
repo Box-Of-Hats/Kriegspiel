@@ -87,3 +87,7 @@ class CheckMate(RefereeOutput):
         super().__init__(*args, **kwargs)
         self.label = "You are in check mate."
 
+class GameOver(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label = "Game over! King was taken"
