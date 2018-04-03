@@ -133,13 +133,13 @@ class Referee():
             return self.outputs["check_mate"](for_player=player_name)
         #Would put other player in check mate
         elif self.is_in_check_mate((player_id +1) % 2, next_board.board):
-            return self.outputs["check_mate"](for_player=player_name)
+            return self.outputs["check_mate"](for_player=(player_id +1) % 2)
         #Move would put player in check
         elif self.is_in_check(player_id, next_board.board):
             return self.outputs["col_check"](for_player=player_name)
         #Would put other player in check
         elif self.is_in_check((player_id +1) % 2, next_board.board):
-            return self.outputs["col_check"](for_player=player_name)
+            return self.outputs["col_check"](for_player=(player_id +1) % 2)
         #Move is legal and a piece was taken:
         elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
             return self.outputs["okay_taken"](for_player=player_name)
@@ -180,8 +180,25 @@ class Referee():
         return False
     
 
+    def is_game_over(self, player_id, board=None):
+        #Has the king of a given player been killed?
+        king_pos = None
+        if not board:
+            board = self.game.board.board
+        for row_no, row in enumerate(board):
+            for cell_no, cell in enumerate(row):
+                if isinstance(cell, King):
+                    if cell.owner_id == player_id:
+                        king_pos = (row_no, cell_no)
+
+        return not bool(king_pos)
+
+
+
     def is_in_check(self, player_id, board=None):
         #Is a player in check?
+        #We do not yet know the position of the king:
+        king_pos = None
         if not board:
             board = self.game.board.board
         attacking_pieces = {}
@@ -193,6 +210,11 @@ class Referee():
                 elif issubclass(type(cell), ChessPiece):
                     if cell.owner_id != player_id:
                         attacking_pieces[cell] = (row_no, cell_no)
+
+
+        if not king_pos:
+            #If there is no king on the board, return true.
+            return True
         
         for piece in attacking_pieces:
             if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):

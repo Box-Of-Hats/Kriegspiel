@@ -94,6 +94,7 @@ class Chess():
             valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
             print(self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name))
 
+
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)
 
