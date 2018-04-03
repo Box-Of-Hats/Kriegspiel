@@ -92,6 +92,7 @@ class Chess():
         while not valid_move:
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
             valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
+            print(self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move))
 
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)

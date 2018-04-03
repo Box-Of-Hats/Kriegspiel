@@ -82,8 +82,3 @@ class CheckMate(RefereeOutput):
         super().__init__(*args, **kwargs)
         self.label = "You are in check mate."
 
-
-
-
-output = CheckMate(for_player="Jake", extra="wow")
-print(output)
