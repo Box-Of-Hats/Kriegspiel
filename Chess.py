@@ -92,7 +92,7 @@ class Chess():
         while not valid_move:
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
             valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
-            print(self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move))
+            print(self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name))
 
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)
@@ -189,13 +189,13 @@ if __name__ == "__main__":
 
     #Set the players
     if args.player1:
-        p1 = player_types[args.player1](name="Player 1")
+        p1 = player_types[args.player1](name="White")
     else:
-        p1 = HumanPlayer(name="Jake") 
+        p1 = HumanPlayer(name="White") 
     if args.player2:
-        p2 = player_types[args.player2](name="Player 2")
+        p2 = player_types[args.player2](name="Black")
     else:
-        p2 = HumanPlayer(name="Cheating Bob") 
+        p2 = HumanPlayer(name="Black") 
 
     #Set the layout
     if args.layout_file:

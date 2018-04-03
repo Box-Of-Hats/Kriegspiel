@@ -111,10 +111,13 @@ class Referee():
 
         return True
 
-    def verify_move(self, _from, _to, board, player_id, echo=False):
+    def verify_move(self, _from, _to, board, player_id, player_name=None, echo=False):
         """
         Take a move and return the relevant referee output.
         """
+        if not player_name:
+            player_name = "Player (ID{})".format(player_id)
+
         #If the move was made, what would the board be?
         next_board = Board()
         next_board.load_board(board.board)
@@ -123,26 +126,26 @@ class Referee():
 
         #Move is not legal, return 'blocked'
         if not self._is_move_legal(_from, _to, player_id, echo=echo):
-            return self.outputs["blocked"](for_player=player_id)
+            return self.outputs["blocked"](for_player=player_name)
         #Move is legal:
-        #Move would put player in check
-        elif self.is_in_check(player_id, next_board.board):
-            return self.outputs["check"](for_player=player_id)
-        #Would put other player in check
-        elif self.is_in_check((player_id +1) % 2, next_board.board):
-            return self.outputs["check"](for_player=player_id)
         #Would put player in check mate
         elif self.is_in_check_mate(player_id, next_board.board):
-            return self.outputs["check_mate"](for_player=player_id)
+            return self.outputs["check_mate"](for_player=player_name)
         #Would put other player in check mate
         elif self.is_in_check_mate((player_id +1) % 2, next_board.board):
-            return self.outputs["check_mate"](for_player=player_id)
+            return self.outputs["check_mate"](for_player=player_name)
+        #Move would put player in check
+        elif self.is_in_check(player_id, next_board.board):
+            return self.outputs["col_check"](for_player=player_name)
+        #Would put other player in check
+        elif self.is_in_check((player_id +1) % 2, next_board.board):
+            return self.outputs["col_check"](for_player=player_name)
         #Move is legal and a piece was taken:
-        elif True: #TODO: Add condition
-            return self.outputs["okay_taken"](for_player=player_id)
+        elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
+            return self.outputs["okay_taken"](for_player=player_name)
         #Move is legal:
         elif True: #TODO Add condition
-            return self.outputs["okay"](for_player=player_id)
+            return self.outputs["okay"](for_player=player_name)
         else:
             raise Exception("Was verifying move but no conditions were met :/ :/ smh")
 
