@@ -8,18 +8,10 @@ from Referee import *
 import argparse
 
 """
-Misc:
-
-Chess Implementation:
--
 Kriegspiel:
 TODO: Implement Referee output
-TODO: Indicate what type of check a player is in
 Smart thing:
 TODO: Implement Analyser
-
-Extra:
-TODO: Add graphical prompt for user moves
 
 """
 

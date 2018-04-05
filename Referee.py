@@ -127,7 +127,7 @@ class Referee():
 
         #Move is legal and a piece was taken:
         elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
-            return OkayTaken(for_player=player_name)
+            return OkayTaken(for_player=player_name, additional_text=" - from cell {}".format(_to))
 
         #Move is legal:
         else:
