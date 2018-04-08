@@ -6,10 +6,10 @@ class CheatAnalyser():
         self.piece_values = {
             Pawn: 1,
             King: 10000,
-            Queen: 20,
-            Rook: 8,
-            Knight: 10,
-            Bishop: 8,
+            Queen: 9,
+            Rook: 5,
+            Knight: 3,
+            Bishop: 3,
         }
 
     def get_score_for_board(self, board, player_id):
