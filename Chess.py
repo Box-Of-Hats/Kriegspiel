@@ -31,6 +31,7 @@ class Chess():
         self.last_move = 1 #Who's move it was last
         self.referee = referee
         self.referee.game = self
+        self.moves_made = 0
         if not board_layout:
             #If no board layout specified, load default starting chess board
             self.load_game(DEFAULT_LAYOUT)
@@ -80,15 +81,18 @@ class Chess():
 
         print("\nIt's {name}'s (ID: {id}) turn to make a move.".format(name=current_player.name, id=current_player_id))
 
-        valid_move = False
-        while not valid_move:
+        is_valid_move = False
+        while not is_valid_move:
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
-            valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
-            print(self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name))
+            is_valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
+            move_output = self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name)
+            print(move_output)
+            current_player.notify(move_output, self.moves_made)
 
 
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)
+        self.moves_made += 1
 
     def get_board_for_player(self, player_id):
         """

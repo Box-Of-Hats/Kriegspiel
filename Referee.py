@@ -126,7 +126,7 @@ class Referee():
             return self.is_in_check((player_id +1) % 2, next_board.board)
 
         #Move is legal and a piece was taken:
-        elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to): #TODO: Add condition
+        elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):
             return OkayTaken(for_player=player_name, additional_text=" - from cell {}".format(_to))
 
         #Move is legal:

@@ -14,6 +14,12 @@ class Player():
         """
         raise NotImplementedError("do_move method not implemented for Player: {}".format(self))
 
+    def notify(self, ref_output=None, moves_made=None):
+        """
+        Player recieves output from the referee in the form of a RefereeOutput object.
+        """
+        pass
+
 class HumanPlayer(Player):
     def __init__(self, *args, **kwargs):
         self.analyser = CheatAnalyser()
@@ -42,7 +48,15 @@ class HumanPlayer(Player):
             return self.do_move(board)
             
         print("You want to move from {} to {}".format(from_cell, to_cell))
+        self.analyser.create_next_ref_output(from_cell, to_cell)
         return (from_cell, to_cell)
+
+    """
+    Override notify function.
+    Pass the referee output to the cheat analyser
+    """
+    def notify(self, ref_output, moves_made):
+        self.analyser.add_ref_output(ref_output, moves_made)
 
 class RandomPlayer(Player):
     def __init__(self, *args, **kwargs):

@@ -1,4 +1,23 @@
+"""
+Chess piece values from: 
+"Chess Fundamentals: Completely Revised and Updated for the 21st Century"
+    https://books.google.co.uk/books/about/Chess_Fundamentals.html?id=rDz8do_EDjkC
+"""
+
 from ChessPiece import *
+from RefereeOutput import *
+
+
+"""
+Container for referee output objects, with additional arguments.
+"""
+class SavedOutput():
+    def __init__(self, from_cell, to_cell, output=None, moves_made=None):
+        self.output = output
+        self.moves_made = moves_made
+        self.from_cell = from_cell
+        self.to_cell = to_cell
+        
 
 
 class CheatAnalyser():
@@ -11,9 +30,12 @@ class CheatAnalyser():
             Knight: 3,
             Bishop: 3,
         }
+        #A log of all referee outputs, in chronological order
+        self.ref_outputs = []
 
     def get_score_for_board(self, board, player_id):
         """
+        Basic utility function.
         Get the score of a given board state.
         Simply sums the scores of all pieces on the board.
         """
@@ -27,3 +49,22 @@ class CheatAnalyser():
                         score -= self.piece_values[type(piece)]
 
         return score
+
+    #def add_ref_output(self, output, moves_made, from_cell, to_cell):
+    #    self.ref_outputs.append(SavedOutput(output, moves_made, from_cell, to_cell))
+    def add_ref_output(self, output, moves_made):
+        if not self.ref_outputs[-1].output:
+            self.ref_outputs[-1].output = output
+            self.ref_outputs[-1].moves_made = moves_made
+        else:
+            raise Exception("Big issue with ref output :/")
+        
+        #print("Latest output: {}".format(self.ref_outputs))
+        for o in self.ref_outputs:
+            print(o.moves_made, o.output, o.from_cell, o.to_cell)
+
+    def create_next_ref_output(self, from_cell, to_cell):
+        """
+        Create next SavedOutput object and add it to the log.
+        """
+        self.ref_outputs.append(SavedOutput(from_cell, to_cell))
