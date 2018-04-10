@@ -53,6 +53,10 @@ class CheatAnalyser():
     #def add_ref_output(self, output, moves_made, from_cell, to_cell):
     #    self.ref_outputs.append(SavedOutput(output, moves_made, from_cell, to_cell))
     def add_ref_output(self, output, moves_made):
+        """
+        Update the latest referee output object in the log with the number of moves made and the output
+        given by the referee.
+        """
         if not self.ref_outputs[-1].output:
             self.ref_outputs[-1].output = output
             self.ref_outputs[-1].moves_made = moves_made

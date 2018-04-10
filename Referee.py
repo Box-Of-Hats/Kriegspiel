@@ -9,15 +9,26 @@ class Referee():
     def __init__(self,):
         pass
 
-    def _is_move_legal(self, _from, _to, player_id, echo=True):
+    def _is_move_legal(self, _from, _to, player_id, board=None, echo=True):
         """
         Actual is_legal_move check.
         Only ever called privately.
         """
-        moving_piece = self.game.board.get_piece(_from)
+        if not board:
+            board = self.game.board
+
+        moving_piece = board.get_piece(_from)
         #Is the _to location on the board?
         if ((_to[0] >= 8) or (_to[1] >= 8)):
             return False 
+        
+        #Would you put yourself into check?
+        next_board = Board()
+        next_board.load_board(board.board)
+        next_board.move_piece(_from, _to)
+        if self.is_in_check(player_id, board=next_board.board):
+            print("That would put you in check [{}->{}]".format(_from, _to))
+            return False
 
         #Is there a piece in the _from cell?
         if not isinstance(moving_piece, ChessPiece):
@@ -25,8 +36,8 @@ class Referee():
                 print("No piece in cell {}".format(_from))
             return False
         #If there is a piece on the _to cell, is it the other players?
-        if self.game.board.get_piece(_to) != 0:
-            if not self.game.board.get_owner_of_piece(_from) != self.game.board.get_owner_of_piece(_to):
+        if board.get_piece(_to) != 0:
+            if not board.get_owner_of_piece(_from) != board.get_owner_of_piece(_to):
                 if echo: print("Piece in {} belongs to opponent.".format(_to))
                 return False
             #If there is a piece on the _to cell, is the move in the moving pieces attack movespace
@@ -41,7 +52,7 @@ class Referee():
                 print("Not a valid move for piece: {}".format(moving_piece))
             return False
         #Is the piece being moved belonging to the player trying to move it?
-        if not self.game.board.get_owner_of_piece(_from) == player_id:
+        if not board.get_owner_of_piece(_from) == player_id:
             if echo: 
                 print("Trying to move opponents piece.")
             return False
@@ -86,7 +97,7 @@ class Referee():
                     print("\tFrom: {f} , To: {t} , Player: {p}".format(f=_from, t=_to, p=player_id))
             #Is the cell free?
             for i,j in cells_to_check:
-                if not self.game.board.cell_is_free((i, j)):
+                if not board.cell_is_free((i, j)):
                     return False
 
         return True
@@ -110,23 +121,25 @@ class Referee():
 
         #Move is legal:
         #Would put player in check mate
-        elif self.is_in_check_mate(player_id, next_board.board):
+        if self.is_in_check_mate(player_id, next_board.board):
+            print("Youre putting yourself in checkmate")
             return CheckMate(for_player=player_name)
 
         #Would put other player in check mate
-        elif self.is_in_check_mate((player_id +1) % 2, next_board.board):
-            return CheckMate(for_player=(player_name+1)%2)
+        #if self.is_in_check_mate((player_id +1) % 2, next_board.board):
+        #    print("Youre putting them in checkmate")
+        #    return CheckMate(for_player=(player_id+1)%2)
 
         #Move would put player in check
-        elif self.is_in_check(player_id, next_board.board):
+        if self.is_in_check(player_id, next_board.board):
             return self.is_in_check(player_id, next_board.board)
 
         #Would put other player in check
-        elif self.is_in_check((player_id +1) % 2, next_board.board):
+        if self.is_in_check((player_id +1) % 2, next_board.board):
             return self.is_in_check((player_id +1) % 2, next_board.board)
 
         #Move is legal and a piece was taken:
-        elif isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):
+        if isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):
             return OkayTaken(for_player=player_name, additional_text=" - from cell {}".format(_to))
 
         #Move is legal:
@@ -137,29 +150,40 @@ class Referee():
     def is_in_check_mate(self, player_id, board=None):
         #Is a player in check?
         #Returns CheckMate ref output if true. False otherwise
-        if not board:
-            board = self.game.board.board
-        defending_pieces = {}
-        for row_no, row in enumerate(board):
-            for cell_no, cell in enumerate(row):
-                if issubclass(type(cell), ChessPiece):
-                    if cell.owner_id == player_id:
-                        defending_pieces[cell] = (row_no, cell_no)
-        
-        #previous_board_layout = board.save_board()
-        for piece in defending_pieces:
-            for move in list(set(piece.moves + piece.attack_moves)):
-                current_pos = defending_pieces[piece]
-                to_pos = (current_pos[0] + move[0], current_pos[1] + move[1])
+        if self.is_in_check(player_id, board):
+            if not board:
+                board = self.game.board.board
+            defending_pieces = {}
+            #Find all of the pieces of the defending player
+            for row_no, row in enumerate(board):
+                for cell_no, cell in enumerate(row):
+                    if issubclass(type(cell), ChessPiece):
+                        if cell.owner_id == player_id:
+                            defending_pieces[cell] = (cell_no, row_no)
+            
+            #previous_board_layout = board.save_board()
+            for piece in defending_pieces:
+                for move in list(set(piece.moves + piece.attack_moves)):
+                    #Look at every possible move the defending pieces can make.
+                    current_pos = defending_pieces[piece]
+                    to_pos = (current_pos[0] + move[0], current_pos[1] + move[1])
+                    print("Testing {}->{}".format(current_pos, to_pos))
 
-                if self._is_move_legal(current_pos, to_pos, player_id=player_id, echo=False):
-
-                    temp_board = Board()
-                    temp_board.load_board(board)
-                    temp_board.move_piece(current_pos, to_pos)
-                    if self.is_in_check(player_id, board=board):
-                        return CheckMate(for_player=player_id)
-        return False
+                    if self._is_move_legal(current_pos, to_pos, player_id=player_id, echo=False):
+                        print("\tlegal move...")
+                        #If the move is legal:
+                        temp_board = Board()
+                        temp_board.load_board(board)
+                        temp_board.move_piece(current_pos, to_pos)
+                        #If after that move, the player is no longer in check then it's not checkmate:
+                        if not self.is_in_check(player_id, board=temp_board.board):
+                            #return CheckMate(for_player=player_id)
+                            print("Found a way out of check. Move {}, {}->{}".format(cell, current_pos, to_pos))
+                            return False
+            #return False
+            return CheckMate(for_player=player_id)
+        else:
+            return False
     
 
     def is_game_over(self, player_id, board=None):
@@ -201,18 +225,18 @@ class Referee():
             if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
                 #Is it an knight putting you in check?
                 if isinstance(piece, Knight):
-                    print("Knight check!!!!!!")
+                    print("Knight check!!!!!! from: {}".format(piece))
                     return KnightCheck(for_player=player_id)
 
                 elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
-                    print("Row check!!!!!!")
+                    print("Row check!!!!!! from: {}".format(piece))
                     return RowCheck(for_player=player_id)
 
                 elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
-                    #print("Column check!!!!!!")
+                    print("Column check!!!!!! from: {}".format(piece))
                     return ColumnCheck(for_player=player_id)
                 else:
-                    print("Diagonal check!!!!!!")
+                    print("Diagonal check!!!!!! from: {}".format(piece))
                     return DiagonalCheck(for_player=player_id)
 
         #Player is not in check

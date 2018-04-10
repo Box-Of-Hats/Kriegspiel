@@ -13,6 +13,10 @@ TODO: Implement Referee output
 Smart thing:
 TODO: Implement Analyser
 
+
+TODO: Player can move their king into check - fix!
+TODO: Checkmate doesnt seem to work properly :/
+
 """
 
 
