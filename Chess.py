@@ -3,7 +3,7 @@
 
 from ChessPiece import Pawn, Rook, Knight, Bishop, King, Queen, PieceFactory, ChessPiece
 from Board import Board
-from Player import HumanPlayer, RandomPlayer
+from Player import *
 from Referee import * 
 import argparse
 
@@ -147,6 +147,18 @@ class Chess():
         Get the opposing ID of a player.
         """
         return (player_id+1)%2
+
+    def to_letter_coordinates(cell):
+        """
+        <Static>
+        Get the letter coordinates, eg "a5", for a given numerical coordinate (0,6)
+        """
+        col_conversion = {b: a for a,b in zip(list("abcdefgh"),[0,1,2,3,4,5,6,7])}
+        row_conversion = {b: a for a,b in zip(list("87654321"),[0,1,2,3,4,5,6,7])}
+
+        col = col_conversion[cell[0]]
+        row = row_conversion[cell[1]]
+        return "{}{}".format(col, row)
 
 
 
