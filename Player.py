@@ -48,7 +48,7 @@ class HumanPlayer(Player):
             return self.do_move(board)
             
         print("You want to move from {} to {}".format(from_cell, to_cell))
-        self.analyser.create_next_ref_output(from_cell, to_cell)
+        #self.analyser.create_next_ref_output(from_cell, to_cell)
         return (from_cell, to_cell)
 
     """

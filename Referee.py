@@ -120,7 +120,7 @@ class Referee():
 
         #Move is not legal, return 'blocked'
         if not self._is_move_legal(_from, _to, player_id, echo=echo):
-            return [Blocked(for_player=player_name)]
+            return [Blocked(for_player=player_name, from_cell=_from, to_cell=_to)]
 
         #Would put player in check mate
         #if self.is_in_check_mate(player_id, next_board.board):
@@ -145,10 +145,11 @@ class Referee():
         #Move is legal and a piece was taken:
         if isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):
             #return OkayTaken(for_player=player_name, additional_text=" - from cell {}".format(_to))
-            outputs.append(OkayTaken(for_player=player_id, additional_text=" - from cell {}".format(_to)))
+            outputs.append(OkayTaken(for_player=player_id, from_cell=_from, to_cell=_to, additional_text=" - from cell {}".format(_to)))
+            outputs.append(OkayTaken(for_player=Chess.opponent_id(player_id), from_cell=_to, to_cell=_to, additional_text=" - from cell {}".format(_to)))
         else:
             #return Okay(for_player=player_name)
-            outputs.append(Okay(for_player=player_id))
+            outputs.append(Okay(for_player=player_id, from_cell=_from, to_cell=_to))
 
         return outputs
 

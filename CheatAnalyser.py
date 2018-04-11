@@ -12,11 +12,11 @@ from RefereeOutput import *
 Container for referee output objects, with additional arguments.
 """
 class SavedOutput():
-    def __init__(self, from_cell, to_cell, output=None, moves_made=None):
+    def __init__(self, output=None, moves_made=None):
         self.output = output
         self.moves_made = moves_made
-        self.from_cell = from_cell
-        self.to_cell = to_cell
+        #self.from_cell = from_cell
+        #self.to_cell = to_cell
         
 
 
@@ -76,10 +76,10 @@ class CheatAnalyser():
         print("Saved outputs:")
         print("  m#\tFrom\tTo\tOutput")
         for o in self.ref_outputs:
-            print("  {}\t{}\t{}\t{}".format(o.moves_made, o.from_cell, o.to_cell, o.output))
+            print("  {}\t{}\t{}\t{}".format(o.moves_made, o.output.from_cell, o.output.to_cell, o.output))
 
-    def create_next_ref_output(self, from_cell=None, to_cell=None, output=None, moves_made=None):
+    def create_next_ref_output(self, output=None, moves_made=None):
         """
         Create next SavedOutput object and add it to the log.
         """
-        self.ref_outputs.append(SavedOutput(from_cell, to_cell, output, moves_made))
+        self.ref_outputs.append(SavedOutput(output, moves_made))
