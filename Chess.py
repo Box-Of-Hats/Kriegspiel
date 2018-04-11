@@ -190,7 +190,7 @@ if __name__ == "__main__":
     #Parse any passed args:
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--layout_file", help="The filepath of the layout you wish to load.")
-    parser.add_argument("-r", "--referee", help="The type of referee. 0: fair, 1: cheat w/p1, 2: cheat w/p2, 3: laxx", choices=sorted([x for x in referees]))
+    parser.add_argument("-r", "--referee", help="The type of referee.", choices=sorted([x for x in referees]))
     parser.add_argument("-g", "--gamemode", help="The game mode to use.", choices=sorted([x for x in game_modes]))
     parser.add_argument("-p1", "--player1", help="The type of player one.", choices=sorted([x for x in player_types]))
     parser.add_argument("-p2", "--player2", help="The type of player two.", choices=sorted([x for x in player_types]))
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     #Set the type of referee
     if args.referee:
-        referee = referees[int(args.referee)]
+        referee = referees[args.referee]
     else:
         #If referee is not specified, use a fair referee
         referee = referees["fair"]
