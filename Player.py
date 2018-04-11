@@ -18,7 +18,7 @@ class Player():
         """
         Player recieves output from the referee in the form of a RefereeOutput object.
         """
-        pass
+        print("Referee: '{}'".format(ref_output))
 
 class HumanPlayer(Player):
     def __init__(self, *args, **kwargs):
@@ -56,6 +56,7 @@ class HumanPlayer(Player):
     Pass the referee output to the cheat analyser
     """
     def notify(self, ref_output, moves_made):
+        super().notify(ref_output, moves_made)
         self.analyser.add_ref_output(ref_output, moves_made)
 
 class RandomPlayer(Player):

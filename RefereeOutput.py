@@ -47,37 +47,47 @@ class Blocked(IllegalMove):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "Blocked"
+
+
+class Impossible(IllegalMove):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        self.label = "Impossible"
         
 """
 Check announcements
 """
 
-class DiagonalCheck(RefereeOutput):
+class Check(RefereeOutput):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+class DiagonalCheck(Check):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "You are in diagonal check."
 
-class LongDiagonalCheck(RefereeOutput):
+class LongDiagonalCheck(Check):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "You are in long diagonal check."
 
-class KnightCheck(RefereeOutput):
+class KnightCheck(Check):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "You are in check by a Knight."
 
-class RowCheck(RefereeOutput):
+class RowCheck(Check):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "You are in row-check."
 
-class ColumnCheck(RefereeOutput):
+class ColumnCheck(Check):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "You are in column-check."
 
-class CheckMate(RefereeOutput):
+class CheckMate(Check):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label = "You are in check mate."

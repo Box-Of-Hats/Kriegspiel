@@ -80,8 +80,9 @@ class Chess():
     def do_move(self):
         self.last_move = Chess.opponent_id(self.last_move)
         current_player_id = self.last_move
-        
-        current_player = self.players[self.last_move]
+        #Player object:
+        #current_player = self.players[self.last_move]
+        current_player = self.get_player(self.last_move)
 
         print("\nIt's {name}'s (ID: {id}) turn to make a move.".format(name=current_player.name, id=current_player_id))
 
@@ -90,13 +91,29 @@ class Chess():
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
             is_valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
             move_output = self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name)
-            print(move_output)
-            current_player.notify(move_output, self.moves_made)
+            #print(move_output)
+
+            #If illegal, tell only the player that was making the move:
+            if isinstance(move_output[0], IllegalMove):
+                current_player.notify(move_output[0], self.moves_made)
+
+        #Loop through the ref outputs and notify the corresponding players
+        for output in move_output:
+            self.get_player(player_id=output.for_player).notify(output, self.moves_made)
+        #if isinstance(move_output, Check):
+        #    self.get_player(player_id=Chess.opponent_id(current_player_id)).notify(move_output, self.moves_made)
+        #    current_player.notify(Okay(current_player_id), self.moves_made)
 
 
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)
         self.moves_made += 1
+
+    def get_player(self, player_id):
+        """
+        Get a player oject from a given ID.
+        """
+        return self.players[player_id]
 
     def get_board_for_player(self, player_id):
         """
