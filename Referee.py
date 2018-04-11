@@ -1,7 +1,7 @@
 from ChessPiece import ChessPiece, King, Knight
 from Board import Board
 from RefereeOutput import *
-
+from Chess import Chess
 """
 This ref is fair and does not allow any cheating in the game.
 """
@@ -126,17 +126,17 @@ class Referee():
             return CheckMate(for_player=player_name)
 
         #Would put other player in check mate
-        #if self.is_in_check_mate((player_id +1) % 2, next_board.board):
+        #if self.is_in_check_mate(Chess.opponent_id(player_id), next_board.board):
         #    print("Youre putting them in checkmate")
-        #    return CheckMate(for_player=(player_id+1)%2)
+        #    return CheckMate(for_player=Chess.opponent_id(player_id))
 
         #Move would put player in check
         if self.is_in_check(player_id, next_board.board):
             return self.is_in_check(player_id, next_board.board)
 
         #Would put other player in check
-        if self.is_in_check((player_id +1) % 2, next_board.board):
-            return self.is_in_check((player_id +1) % 2, next_board.board)
+        if self.is_in_check(Chess.opponent_id(player_id), next_board.board):
+            return self.is_in_check(Chess.opponent_id(player_id), next_board.board)
 
         #Move is legal and a piece was taken:
         if isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):

@@ -78,7 +78,7 @@ class Chess():
         return True
 
     def do_move(self):
-        self.last_move = (self.last_move + 1) % 2
+        self.last_move = Chess.opponent_id(self.last_move)
         current_player_id = self.last_move
         
         current_player = self.players[self.last_move]
@@ -122,6 +122,15 @@ class Chess():
                 if isinstance(cell, ChessPiece):
                     if cell.owner_id == player_id:
                         yield cell
+
+
+    def opponent_id(player_id):
+        """
+        <Static>
+        Get the opposing ID of a player.
+        """
+        return (player_id+1)%2
+
 
 
 
