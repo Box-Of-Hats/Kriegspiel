@@ -18,7 +18,8 @@ class Player():
         """
         Player recieves output from the referee in the form of a RefereeOutput object.
         """
-        print("Referee: '{}'".format(ref_output))
+        #print("Referee: '{}'".format(ref_output))
+        pass
 
 class HumanPlayer(Player):
     def __init__(self, *args, **kwargs):
@@ -78,7 +79,7 @@ class RandomPlayer(Player):
         moving_piece_type = my_pieces[moving_piece_loc]
         random_move = random.choice(moving_piece_type.moves + moving_piece_type.attack_moves)
         random_to = ((moving_piece_loc[0] - random_move[0]) %8, (moving_piece_loc[1] - random_move[1]) %8)
-        print(my_pieces)
-        print("Random move: {} -> {}".format(moving_piece_loc, random_to))
+        #print(my_pieces)
+        #print("Random move: {} -> {}".format(moving_piece_loc, random_to))
         return (moving_piece_loc, random_to)
         

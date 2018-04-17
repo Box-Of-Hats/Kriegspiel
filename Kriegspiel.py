@@ -84,7 +84,7 @@ class Kriegspiel():
         #current_player = self.players[self.last_move]
         current_player = self.get_player(self.last_move)
 
-        print("\nIt's {name}'s (ID: {id}) turn to make a move.".format(name=current_player.name, id=current_player_id))
+        print("\nIt's {name}'s (ID: {id}) turn to make a move. [Move no {move_no}]".format(name=current_player.name, id=current_player_id, move_no=self.moves_made))
 
         is_valid_move = False
         while not is_valid_move:
