@@ -11,6 +11,7 @@ import argparse
 
 TODO: Checkmate doesnt seem to work properly :/
 TODO: All outputs given to both players?
+TODO: Add Impossible RefereeOutput so that it is in use
 
 """
 

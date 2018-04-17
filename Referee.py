@@ -9,6 +9,17 @@ class Referee():
     def __init__(self,):
         pass
 
+    def is_move_impossible(self, _from, _to, board, echo=False):
+        """
+        Is the move in the piece's movespace?
+        """
+        moving_piece = board.get_piece(_from)
+        #if not moving_piece.is_legal_transform(_from, _to, attacking=True):
+        #    return Impossible(player_id, _from, _to)
+        #else:
+        #    return False
+        return not (moving_piece.is_legal_transform(_from, _to, attacking=True) or moving_piece.is_legal_transform(_from, _to, attacking=False))
+
     def _is_move_legal(self, _from, _to, player_id, board=None, echo=False):
         """
         Actual is_legal_move check.
@@ -41,7 +52,7 @@ class Referee():
                 if echo: print("Piece in {} belongs to opponent.".format(_to))
                 return False
             #If there is a piece on the _to cell, is the move in the moving pieces attack movespace
-            if not moving_piece.is_legal_transform(_from, _to, attacking=True):
+            if not moving_piece.is_legal_transform(_from, _to, attacking=True): #Replaced this line with a separate function
                 if echo: 
                     print("Not a valid attack move for piece: {}".format(moving_piece))
                     print("legal att moves: {}".format(moving_piece.attack_moves))
@@ -116,9 +127,11 @@ class Referee():
         next_board.move_piece(_from, _to)
         #next_board.print_board(show_key=True)
 
+        if self.is_move_impossible(_from, _to, board=board, echo=echo):
+            return [Impossible(for_player=player_id, from_cell=_from, to_cell=_to)]
         #Move is not legal, return 'blocked'
-        if not self._is_move_legal(_from, _to, player_id, echo=echo):
-            return [Blocked(for_player=player_name, from_cell=_from, to_cell=_to)]
+        elif not self._is_move_legal(_from, _to, player_id, board=board, echo=echo):
+            return [Blocked(for_player=player_id, from_cell=_from, to_cell=_to)]
 
         #Would put player in check mate
         #if self.is_in_check_mate(player_id, next_board.board):
