@@ -1,7 +1,7 @@
 from ChessPiece import ChessPiece, King, Knight
 from Board import Board
 from RefereeOutput import *
-from Chess import Chess
+from Kriegspiel import Kriegspiel
 """
 This ref is fair and does not allow any cheating in the game.
 """
@@ -128,25 +128,25 @@ class Referee():
         #    return CheckMate(for_player=player_name)
 
         #Would put other player in check mate
-        if self.is_in_check_mate(Chess.opponent_id(player_id), next_board.board):
+        if self.is_in_check_mate(Kriegspiel.opponent_id(player_id), next_board.board):
             print("Youre putting them in checkmate")
-            #return CheckMate(for_player=Chess.opponent_id(player_id))
-            outputs.append(CheckMate(for_player=Chess.opponent_id(player_id)))
+            #return CheckMate(for_player=Kriegspiel.opponent_id(player_id))
+            outputs.append(CheckMate(for_player=Kriegspiel.opponent_id(player_id)))
         #Move is legal:
         #Move would put player in check
         #if self.is_in_check(player_id, next_board.board):
         #    return self.is_in_check(player_id, next_board.board)
 
         #Would put other player in check
-        if self.is_in_check(Chess.opponent_id(player_id), next_board.board):
-            #return self.is_in_check(Chess.opponent_id(player_id), next_board.board)
-            outputs.append(self.is_in_check(Chess.opponent_id(player_id), next_board.board))
+        if self.is_in_check(Kriegspiel.opponent_id(player_id), next_board.board):
+            #return self.is_in_check(Kriegspiel.opponent_id(player_id), next_board.board)
+            outputs.append(self.is_in_check(Kriegspiel.opponent_id(player_id), next_board.board))
 
         #Move is legal and a piece was taken:
         if isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):
             #return OkayTaken(for_player=player_name, additional_text=" - from cell {}".format(_to))
             outputs.append(OkayTaken(for_player=player_id, from_cell=_from, to_cell=_to, additional_text=" - from cell {}".format(_to)))
-            outputs.append(OkayTaken(for_player=Chess.opponent_id(player_id), from_cell=_to, to_cell=_to, additional_text=" - from cell {}".format(_to)))
+            outputs.append(OkayTaken(for_player=Kriegspiel.opponent_id(player_id), from_cell=_to, to_cell=_to, additional_text=" - from cell {}".format(_to)))
         else:
             #return Okay(for_player=player_name)
             outputs.append(Okay(for_player=player_id, from_cell=_from, to_cell=_to))
