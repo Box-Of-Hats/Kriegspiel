@@ -51,7 +51,6 @@ class HumanPlayer(Player):
             print("\tMust be in range a1-h7")
             return self.do_move(board)
             
-        #self.analyser.create_next_ref_output(from_cell, to_cell)
         return (from_cell, to_cell)
 
     """
