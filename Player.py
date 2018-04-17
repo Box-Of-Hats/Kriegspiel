@@ -26,6 +26,10 @@ class HumanPlayer(Player):
         super().__init__(*args, **kwargs)
 
     def do_move(self, board):
+        print("History of referee outputs:".format(self))
+        print("  m#\tFrom\tTo\tOutput")
+        for o in self.analyser.ref_outputs:
+            print("  {}\t{}\t{}\t{}".format(o.moves_made, o.output.from_cell, o.output.to_cell, o.output))
         board.print_board(show_key=True)
         col_conversion = {a: b for a,b in zip(list("abcdefgh"),[0,1,2,3,4,5,6,7])}
         row_conversion = {a: b for a,b in zip(list("87654321"),[0,1,2,3,4,5,6,7])}
@@ -47,7 +51,7 @@ class HumanPlayer(Player):
             print("\tMust be in range a1-h7")
             return self.do_move(board)
             
-        print("You want to move from {} to {}".format(from_cell, to_cell))
+        #print("You want to move from {} to {}".format(from_cell, to_cell))
         #self.analyser.create_next_ref_output(from_cell, to_cell)
         return (from_cell, to_cell)
 

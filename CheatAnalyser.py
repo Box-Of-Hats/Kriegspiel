@@ -52,11 +52,11 @@ class CheatAnalyser():
 
     #def add_ref_output(self, output, moves_made, from_cell, to_cell):
     #    self.ref_outputs.append(SavedOutput(output, moves_made, from_cell, to_cell))
-    def add_ref_output(self, output, moves_made):
+    def add_ref_output(self, output, moves_made, echo=False):
         """
         Update the latest referee output object in the log with the number of moves made and the output
         given by the referee.
-        """
+        """ 
         try:
             if not self.ref_outputs[-1].output:
                 self.ref_outputs[-1].output = output
@@ -64,19 +64,20 @@ class CheatAnalyser():
             else:
                 #raise Exception("Big issue with ref output :/")
                 self.create_next_ref_output()
-                self.add_ref_output(output, moves_made)
+                self.add_ref_output(output, moves_made, echo=echo)
         except IndexError:
             #Triggers if the ref_outputs list is empty.
             #Fix by creating a ref output object before adding to it.
             self.create_next_ref_output()
-            self.add_ref_output(output, moves_made)
+            self.add_ref_output(output, moves_made, echo=echo)
 
         
         #print("Latest output: {}".format(self.ref_outputs))
-        print("Saved outputs:")
-        print("  m#\tFrom\tTo\tOutput")
+        if echo:
+            print("({}) Saved outputs:".format(self))
+            print("  m#\tFrom\tTo\tOutput")
         for o in self.ref_outputs:
-            print("  {}\t{}\t{}\t{}".format(o.moves_made, o.output.from_cell, o.output.to_cell, o.output))
+            if echo: print("  {}\t{}\t{}\t{}".format(o.moves_made, o.output.from_cell, o.output.to_cell, o.output))
 
     def create_next_ref_output(self, output=None, moves_made=None):
         """

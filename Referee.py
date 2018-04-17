@@ -9,7 +9,7 @@ class Referee():
     def __init__(self,):
         pass
 
-    def _is_move_legal(self, _from, _to, player_id, board=None, echo=True):
+    def _is_move_legal(self, _from, _to, player_id, board=None, echo=False):
         """
         Actual is_legal_move check.
         Only ever called privately.
@@ -27,7 +27,7 @@ class Referee():
         next_board.load_board(board.board)
         next_board.move_piece(_from, _to)
         if self.is_in_check(player_id, board=next_board.board):
-            print("That would put you in check [{}->{}]".format(_from, _to))
+            if echo: print("That would put you in check [{}->{}]".format(_from, _to))
             return False
 
         #Is there a piece in the _from cell?
@@ -53,13 +53,11 @@ class Referee():
             return False
         #Is the piece being moved belonging to the player trying to move it?
         if not board.get_owner_of_piece(_from) == player_id:
-            if echo: 
-                print("Trying to move opponents piece.")
+            if echo: print("Trying to move opponents piece.")
             return False
         #If piece can't jump, are all cells between _from and _to cells free?
         path_is_clear = True
-        if echo: 
-            print("{}, can jump: {}".format(moving_piece, moving_piece.can_jump))
+        if echo: print("{}, can jump: {}".format(moving_piece, moving_piece.can_jump))
         if not moving_piece.can_jump:
             if _from[1] > _to[1]:
                 y_range = list(range(_from[1], _to[1], -1))
@@ -116,7 +114,7 @@ class Referee():
         next_board = Board()
         next_board.load_board(board.board)
         next_board.move_piece(_from, _to)
-        next_board.print_board(show_key=True)
+        #next_board.print_board(show_key=True)
 
         #Move is not legal, return 'blocked'
         if not self._is_move_legal(_from, _to, player_id, echo=echo):
@@ -129,7 +127,7 @@ class Referee():
 
         #Would put other player in check mate
         if self.is_in_check_mate(Kriegspiel.opponent_id(player_id), next_board.board):
-            print("Youre putting them in checkmate")
+            if echo: print("Youre putting them in checkmate")
             #return CheckMate(for_player=Kriegspiel.opponent_id(player_id))
             outputs.append(CheckMate(for_player=Kriegspiel.opponent_id(player_id)))
         #Move is legal:
@@ -154,16 +152,16 @@ class Referee():
         return outputs
 
 
-    def is_in_check_mate(self, player_id, board=None):
+    def is_in_check_mate(self, player_id, board=None, echo=False):
         #Is a player in check?
         #Returns CheckMate ref output if true. False otherwise
-        print(" ---- testing with board:")
-        print(board)
+        if echo: print(" ---- testing with board:")
+        if echo: print(board)
         #if not board:
         #    board = self.game.board.board
-        print("Doing check-mate test...")
+        if echo: print("Doing check-mate test...")
         if self.is_in_check(player_id, board):
-            print("  - is currently in check")
+            if echo: print("  - is currently in check")
             
             defending_pieces = {}
             #Find all of the pieces of the defending player
@@ -179,10 +177,10 @@ class Referee():
                     #Look at every possible move the defending pieces can make.
                     current_pos = defending_pieces[piece]
                     to_pos = (current_pos[0] + move[0], current_pos[1] + move[1])
-                    print("Testing {}->{}".format(current_pos, to_pos))
+                    if echo: print("Testing {}->{}".format(current_pos, to_pos))
 
                     if self._is_move_legal(current_pos, to_pos, player_id=player_id, echo=False):
-                        print("\tlegal move...")
+                        if echo: print("\tlegal move...")
                         #If the move is legal:
                         temp_board = Board()
                         temp_board.load_board(board)
@@ -190,12 +188,12 @@ class Referee():
                         #If after that move, the player is no longer in check then it's not checkmate:
                         if not self.is_in_check(player_id, board=temp_board.board):
                             #return CheckMate(for_player=player_id)
-                            print("Found a way out of check. Move {}, {}->{}".format(cell, current_pos, to_pos))
+                            if echo: print("Found a way out of check. Move {}, {}->{}".format(cell, current_pos, to_pos))
                             return False
             #return False
             return CheckMate(for_player=player_id)
         else:
-            print("  - is not currently in check")
+            if echo: print("  - is not currently in check")
             return False
     
 
@@ -213,7 +211,7 @@ class Referee():
         return not bool(king_pos)
 
 
-    def is_in_check(self, player_id, board=None):
+    def is_in_check(self, player_id, board=None, echo=False):
         #Is a player in check?
         #We do not yet know the position of the king:
         king_pos = None
@@ -238,26 +236,26 @@ class Referee():
             if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
                 #Is it an knight putting you in check?
                 if isinstance(piece, Knight):
-                    print("Knight check!!!!!! from: {}".format(piece))
+                    if echo: print("Knight check from: {}".format(piece))
                     return KnightCheck(for_player=player_id)
 
                 elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
-                    print("Row check!!!!!! from: {}".format(piece))
+                    if echo: print("Row check from: {}".format(piece))
                     return RowCheck(for_player=player_id)
 
                 elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
-                    print("Column check!!!!!! from: {}".format(piece))
+                    if echo: print("Column check from: {}".format(piece))
                     return ColumnCheck(for_player=player_id)
                 else:
-                    print("Diagonal check!!!!!! from: {}".format(piece))
+                    if echo: print("Diagonal check from: {}".format(piece))
                     return DiagonalCheck(for_player=player_id)
 
         #Player is not in check
         return False
 
     
-    def is_move_legal(self, _from, _to, player_id, echo=True):
-        return self._is_move_legal(_from, _to, player_id, echo=True)
+    def is_move_legal(self, _from, _to, player_id, echo=False):
+        return self._is_move_legal(_from, _to, player_id, echo=echo)
 
     def set_game(self, _game):
         self._game = _game
