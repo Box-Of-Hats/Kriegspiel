@@ -14,10 +14,6 @@ class Referee():
         Is the move in the piece's movespace?
         """
         moving_piece = board.get_piece(_from)
-        #if not moving_piece.is_legal_transform(_from, _to, attacking=True):
-        #    return Impossible(player_id, _from, _to)
-        #else:
-        #    return False
         return not (moving_piece.is_legal_transform(_from, _to, attacking=True) or moving_piece.is_legal_transform(_from, _to, attacking=False))
 
     def _is_move_legal(self, _from, _to, player_id, board=None, echo=False):
