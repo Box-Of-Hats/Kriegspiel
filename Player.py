@@ -18,7 +18,6 @@ class Player():
         """
         Player recieves output from the referee in the form of a RefereeOutput object.
         """
-        #print("Referee: '{}'".format(ref_output))
         pass
 
 class HumanPlayer(Player):
@@ -52,7 +51,6 @@ class HumanPlayer(Player):
             print("\tMust be in range a1-h7")
             return self.do_move(board)
             
-        #print("You want to move from {} to {}".format(from_cell, to_cell))
         #self.analyser.create_next_ref_output(from_cell, to_cell)
         return (from_cell, to_cell)
 
@@ -79,7 +77,5 @@ class RandomPlayer(Player):
         moving_piece_type = my_pieces[moving_piece_loc]
         random_move = random.choice(moving_piece_type.moves + moving_piece_type.attack_moves)
         random_to = ((moving_piece_loc[0] - random_move[0]) %8, (moving_piece_loc[1] - random_move[1]) %8)
-        #print(my_pieces)
-        #print("Random move: {} -> {}".format(moving_piece_loc, random_to))
         return (moving_piece_loc, random_to)
         
