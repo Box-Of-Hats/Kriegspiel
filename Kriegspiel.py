@@ -8,14 +8,9 @@ from Referee import *
 import argparse
 
 """
-Kriegspiel:
-TODO: Implement Referee output
-Smart thing:
-TODO: Implement Analyser
 
-
-TODO: Player can move their king into check - fix!
 TODO: Checkmate doesnt seem to work properly :/
+TODO: All outputs given to both players?
 
 """
 
@@ -25,6 +20,8 @@ DEFAULT_LAYOUT = ["rnbqkbnr".upper(), "pppppppp".upper(), [0]*8, [0]*8, [0]*8, [
 class Kriegspiel():
     def __init__(self,  player_1, player_2, referee, board_layout=None, use_symbols=True,):
         """
+        player_1/2, Player objects
+        referee, Referee object
         board_layout, iterable, a board layout to load.
         use_symbols, bool, if pieces should use chess symbols (♔) or letters (K).
         """
@@ -81,7 +78,6 @@ class Kriegspiel():
         self.last_move = Kriegspiel.opponent_id(self.last_move)
         current_player_id = self.last_move
         #Player object:
-        #current_player = self.players[self.last_move]
         current_player = self.get_player(self.last_move)
 
         print("\nIt's {name}'s (ID: {id}) turn to make a move. [Move no {move_no}]".format(name=current_player.name, id=current_player_id, move_no=self.moves_made))
@@ -91,7 +87,6 @@ class Kriegspiel():
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
             is_valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
             move_output = self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name)
-            #print(move_output)
 
             #If illegal, tell only the player that was making the move:
             if isinstance(move_output[0], IllegalMove):
@@ -100,10 +95,6 @@ class Kriegspiel():
         #Loop through the ref outputs and notify the corresponding players
         for output in move_output:
             self.get_player(player_id=output.for_player).notify(output, self.moves_made)
-        #if isinstance(move_output, Check):
-        #    self.get_player(player_id=Kriegspiel.opponent_id(current_player_id)).notify(move_output, self.moves_made)
-        #    current_player.notify(Okay(current_player_id), self.moves_made)
-
 
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)
@@ -186,7 +177,7 @@ def debug(c):
         c.do_move()
 
 def testing(c):
-    #c.do_move()
+    """Just used for testing various functions."""
     c.referee.verify_move((0,0), (0,1), c.board, 0)
 
                     
@@ -261,5 +252,3 @@ if __name__ == "__main__":
     c.load_game(layout)
 
     game_modes[gamemode](c)
-    #c.do_move()
-    #referee.verify_move()
