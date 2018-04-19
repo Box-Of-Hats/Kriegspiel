@@ -3,7 +3,7 @@ Chess piece values from:
 "Chess Fundamentals: Completely Revised and Updated for the 21st Century"
     https://books.google.co.uk/books/about/Chess_Fundamentals.html?id=rDz8do_EDjkC
 """
-
+#pylint: disable=W0614 
 from ChessPiece import *
 from RefereeOutput import *
 
