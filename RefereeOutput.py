@@ -3,13 +3,14 @@ Define base classes of referee output
 """
 
 class RefereeOutput():
-    def __init__(self, for_player, from_cell=None, to_cell=None, additional_text="", *args, **kwargs):
+    def __init__(self, for_player, from_cell=None, to_cell=None, moves_made=None, additional_text="", *args, **kwargs):
         self.label = None
         self.for_player = for_player
         self.from_cell = from_cell
         self.to_cell = to_cell
         self.success = None
         self.additional_text = additional_text
+        self.moves_made = moves_made
 
     def __str__(self):
         return "@{p} - {l} {e}".format(p=self.for_player, l=self.label, e=self.additional_text)

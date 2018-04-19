@@ -5,6 +5,9 @@ from Kriegspiel import Kriegspiel
 """
 This ref is fair and does not allow any cheating in the game.
 """
+
+#TODO: Check if Referee.game property is actually in use.
+
 class Referee():
     def __init__(self,):
         pass
@@ -162,6 +165,7 @@ class Referee():
 
 
     def is_in_check_mate(self, player_id, board=None, echo=False):
+        #TODO: Make this take in a Board object and not a board array ??
         #Is a player in check?
         #Returns CheckMate ref output if true. False otherwise
         if echo: print(" ---- testing with board:")

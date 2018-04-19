@@ -15,10 +15,6 @@ class SavedOutput():
     def __init__(self, output=None, moves_made=None):
         self.output = output
         self.moves_made = moves_made
-        #self.from_cell = from_cell
-        #self.to_cell = to_cell
-        
-
 
 class CheatAnalyser():
     def __init__(self):
