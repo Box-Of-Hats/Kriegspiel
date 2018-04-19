@@ -26,7 +26,7 @@ class HumanPlayer(Player):
         super().__init__(*args, **kwargs)
 
     def do_move(self, board):
-        print("History of referee outputs:".format(self))
+        print("History of referee outputs:")
         print("  m#\tFrom\tTo\tOutput")
         for o in self.analyser.ref_outputs:
             print("  {}\t{}\t{}\t{}".format(o.moves_made, o.output.from_cell, o.output.to_cell, o.output))
