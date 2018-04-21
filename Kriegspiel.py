@@ -85,7 +85,7 @@ class Kriegspiel():
         is_valid_move = False
         while not is_valid_move:
             _from, _to = current_player.do_move(self.get_board_for_player(current_player_id))
-            is_valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move)
+            is_valid_move = self.referee.is_move_legal(_from=_from, _to=_to, player_id=self.last_move, board= self.board)
             move_output = self.referee.verify_move(_from=_from, _to=_to, board=self.board, player_id=self.last_move, player_name=self.players[self.last_move].name)
 
             #If illegal, tell only the player that was making the move:

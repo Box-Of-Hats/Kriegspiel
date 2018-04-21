@@ -46,13 +46,16 @@ class Board():
         print("    a b c d e f g h")
 
     def load_board(self, board): 
-            """
-            Load a board from a matrix in the format:
-            ["rnbqkbnr", "pppppppp", "00000000", ... ]
-            """
-            for row_no, row in enumerate(board):
-                for cell_no, cell in enumerate(row):
-                    self.add_piece(row_no, cell_no, cell)
+        """
+        Load a board from a matrix in the format:
+        ["rnbqkbnr", "pppppppp", "00000000", ... ]
+        """
+        if isinstance(board, Board):
+            board = board.board
+
+        for row_no, row in enumerate(board):
+            for cell_no, cell in enumerate(row):
+                self.add_piece(row_no, cell_no, cell)
 
     def save_board(self):
         """
