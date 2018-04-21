@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+#pylint: disable=W0614,E0102,E0213
 from ChessPiece import Pawn, Rook, Knight, Bishop, King, Queen, PieceFactory, ChessPiece
 from Board import Board
 from Player import *
@@ -9,7 +9,6 @@ import argparse
 
 """
 
-TODO: Checkmate doesnt seem to work properly :/
 TODO: All outputs given to both players?
 
 """
@@ -143,6 +142,7 @@ class Kriegspiel():
         <Static>
         Get the letter coordinates, eg "a5", for a given numerical coordinate (0,6)
         """
+        #pylint: disable=E1136
         col_conversion = {b: a for a,b in zip(list("abcdefgh"),[0,1,2,3,4,5,6,7])}
         row_conversion = {b: a for a,b in zip(list("87654321"),[0,1,2,3,4,5,6,7])}
 
