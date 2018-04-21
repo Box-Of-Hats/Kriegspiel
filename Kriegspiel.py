@@ -10,7 +10,7 @@ import argparse
 """
 
 TODO: All outputs given to both players?
-
+TODO: Remove SavedOutput class from CheatAnalyser and make it the Object simply use the RefereeOutput.
 """
 
 
