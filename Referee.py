@@ -6,8 +6,6 @@ from Kriegspiel import Kriegspiel
 This ref is fair and does not allow any cheating in the game.
 """
 
-#TODO: Check if Referee.game property is actually in use.
-
 class Referee():
     def __init__(self,):
         pass
@@ -274,14 +272,6 @@ class Referee():
     
     def is_move_legal(self, _from, _to, player_id, board, echo=False):
         return self._is_move_legal(_from, _to, player_id, board, echo=echo)
-
-    def set_game(self, _game):
-        self._game = _game
-
-    def get_game(self):
-        return self._game
-
-    game = property(get_game, set_game)
 
 """
 This ref is consorting with a player and allows them to cheat.

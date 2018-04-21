@@ -31,7 +31,6 @@ class Kriegspiel():
         self.use_symbols = use_symbols
         self.last_move = 1 #Who's move it was last
         self.referee = referee
-        self.referee.game = self
         self.moves_made = 0
         if not board_layout:
             #If no board layout specified, load default starting chess board
