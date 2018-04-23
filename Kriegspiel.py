@@ -196,7 +196,18 @@ def debug(c):
 
 def testing(c):
     """Just used for testing various functions."""
-    c.referee.verify_move((0,0), (0,1), c.board, 0)
+    #c.referee.verify_move((0,0), (0,1), c.board, 0)
+    c.board.print_board()
+    t_board = Board()
+    t_board.load_board(c.board.save_board())
+    t_board.print_board()
+    echo=True
+    to_positions = [(7,0), (0,7), (0,3), (3,0), (0,0), (7,7), (3,3)]
+    f = (0,0)
+    for pos in to_positions:
+        t_board 
+        b = c.referee.is_path_blocked(f, pos, t_board, echo)
+        print("{} -> {} : {}".format(f, pos, b))
 
                     
 if __name__ == "__main__":
