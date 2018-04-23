@@ -12,9 +12,7 @@ import argparse
 TODO: All outputs given to both players?
 TODO: Remove SavedOutput class from CheatAnalyser and make it the Object simply use the RefereeOutput.
 TODO: Convert Pawn to another piece when it reaches the other side
-TODO: Add game over method to Kriegspiel game
 TODO: Differentiate between long/short diagonal check in Referee.
-TODO: Referee.is_game_over() should take into account check-mate
 """
 
 

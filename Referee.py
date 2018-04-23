@@ -226,7 +226,7 @@ class Referee():
                     king_pos = (row_no, cell_no)
                     print("Found king: {}".format(king_pos))
 
-        return not bool(king_pos)
+        return self.is_in_check_mate(player_id, board) or not bool(king_pos)
 
 
     def is_in_check(self, player_id, board, echo=False):
