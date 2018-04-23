@@ -10,6 +10,52 @@ class Referee():
     def __init__(self,):
         pass
 
+    def is_path_blocked(self, _from, _to, board, echo=False):
+        """
+        Check if there are pieces in the way between two pieces.
+        DOESNT SEEM TO WORK??
+        """
+        if _from[1] > _to[1]:
+            y_range = list(range(_from[1], _to[1], -1))
+        else:
+            y_range = list(range(_from[1], _to[1]))
+
+        if _from[0] > _to[0]:
+            x_range = list(range(_from[0], _to[0], -1))
+        else:
+            x_range = list(range(_from[0], _to[0]))
+
+        #If move is diagonal:
+        if abs(_to[0] - _from[0]) == abs(_to[1] - _from[1]):
+            cells_to_check = list(zip(x_range, y_range))
+            #Dont check current position:
+            if _from in cells_to_check:
+                cells_to_check.remove(_from)
+        #If move is vertical:
+        elif _from[0] == _to[0]:
+            x_range = [_from[0]]*len(y_range)
+            cells_to_check = list(zip(x_range, y_range))
+            if _from in cells_to_check:
+                cells_to_check.remove(_from)
+        #If move is horizontal:
+        elif _from[1] == _to[1]:
+            y_range = [_from[1]]*len(x_range)
+            cells_to_check = list(zip(x_range, y_range))
+            if _from in cells_to_check:
+                cells_to_check.remove(_from)
+        else:
+            print("Reached end of path checks...")
+            return False
+
+        #Dont check current position:
+        if _from in cells_to_check:
+            cells_to_check.remove(_from)
+        for i,j in cells_to_check:
+            if not board.cell_is_free((i, j)):
+                print("Piece blocking in cell ({},{})".format(i,j))
+                return True
+        return False
+
     def is_move_impossible(self, _from, _to, board, echo=False):
         """
         Is the move in the piece's movespace?
