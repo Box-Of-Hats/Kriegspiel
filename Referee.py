@@ -220,11 +220,11 @@ class Referee():
     def is_game_over(self, player_id, board):
         #Has the king of a given player been killed?
         king_pos = None
-        for row_no, row in enumerate(board):
+        for row_no, row in enumerate(board.board):
             for cell_no, cell in enumerate(row):
-                if isinstance(cell, King):
-                    if cell.owner_id == player_id:
-                        king_pos = (row_no, cell_no)
+                if isinstance(cell, King) and cell.owner_id == player_id:
+                    king_pos = (row_no, cell_no)
+                    print("Found king: {}".format(king_pos))
 
         return not bool(king_pos)
 

@@ -14,6 +14,7 @@ TODO: Remove SavedOutput class from CheatAnalyser and make it the Object simply 
 TODO: Convert Pawn to another piece when it reaches the other side
 TODO: Add game over method to Kriegspiel game
 TODO: Differentiate between long/short diagonal check in Referee.
+TODO: Referee.is_game_over() should take into account check-mate
 """
 
 
@@ -101,6 +102,11 @@ class Kriegspiel():
         self.move_piece(_from, _to, player_id=self.last_move)
         self.moves_made += 1
 
+        #Check if the game is over:
+        for player_id in [0,1]:
+            if self.referee.is_game_over(player_id, self.board):
+                self.end_game(winner_id=Kriegspiel.opponent_id(player_id))
+
     def get_player(self, player_id):
         """
         Get a player oject from a given ID.
@@ -132,6 +138,13 @@ class Kriegspiel():
                     if cell.owner_id == player_id:
                         yield cell
 
+    def end_game(self, winner_id):
+        """
+        End the current game.
+        """
+        print("Game Over - Player {} won the game".format(winner_id))
+        quit()
+
 
     def opponent_id(player_id):
         """
@@ -152,7 +165,6 @@ class Kriegspiel():
         col = col_conversion[cell[0]]
         row = row_conversion[cell[1]]
         return "{}{}".format(col, row)
-
 
 
 
