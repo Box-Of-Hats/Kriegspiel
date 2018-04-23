@@ -94,9 +94,7 @@ class Pawn(ChessPiece):
             return self._moves
 
     def promote(self):
-        #self.__class__ = Queen
-        return Queen(self.use_symbol, self.owner_id,)
-        #print("Promoting to {}".format(self))
+        return Queen(self.use_symbol, self.owner_id)
     
     moves = property(get_moves)
     
