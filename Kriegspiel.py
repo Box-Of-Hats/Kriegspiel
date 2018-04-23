@@ -11,8 +11,8 @@ import argparse
 
 TODO: All outputs given to both players?
 TODO: Remove SavedOutput class from CheatAnalyser and make it the Object simply use the RefereeOutput.
-TODO: Convert Pawn to another piece when it reaches the other side
 TODO: Differentiate between long/short diagonal check in Referee.
+TODO: Game thinks a player is in check, even if they arent. Seems to ignore any pieces that are in the path of attacking piece.
 """
 
 
@@ -98,6 +98,12 @@ class Kriegspiel():
 
         #When move is valid, perform the move:
         self.move_piece(_from, _to, player_id=self.last_move)
+
+        #If the piece is a pawn and it is reaching the other side of the board, give a promotion:
+        if isinstance(self.board.get_piece(_to), Pawn) and _to[1] in [0, 7]:
+            promoted_piece = self.board.get_piece(_to).promote()
+            self.board.add_piece(_to[1], _to[0], promoted_piece)
+
         self.moves_made += 1
 
         #Check if the game is over:

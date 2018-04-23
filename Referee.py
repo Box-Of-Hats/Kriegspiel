@@ -231,9 +231,9 @@ class Referee():
 
     def is_in_check(self, player_id, board, echo=False):
         #Is a player in check?
-        #We do not yet know the position of the king:
         king_pos = None
         attacking_pieces = {}
+        #Find the position of the king of the defending player and the positions of the attacking pieces
         for row_no, row in enumerate(board.board):
             for cell_no, cell in enumerate(row):
                 if isinstance(cell, King):
@@ -247,8 +247,8 @@ class Referee():
         if not king_pos:
             #If there is no king on the board, return true.
             return GameOver(for_player=player_id)
-        
         for piece in attacking_pieces:
+            #If a piece can attack the king's position, determine what type of check that is.
             if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
                 #Is it an knight putting you in check?
                 if isinstance(piece, Knight):

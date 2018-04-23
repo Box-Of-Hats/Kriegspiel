@@ -34,6 +34,7 @@ class ChessPiece():
         self.owner_id = colour
         self.illegal_moves = [(0,0)]
         self.move_counter = 0
+        self.use_symbol = use_symbol
         if use_symbol:
             self.symbol = self.symbols[colour]
         else:
@@ -91,6 +92,11 @@ class Pawn(ChessPiece):
             return self._moves + {0: [(0,-2)], 1: [(0,2)]}[self.owner_id]
         else:
             return self._moves
+
+    def promote(self):
+        #self.__class__ = Queen
+        return Queen(self.use_symbol, self.owner_id,)
+        #print("Promoting to {}".format(self))
     
     moves = property(get_moves)
     
