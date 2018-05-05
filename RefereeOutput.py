@@ -49,13 +49,13 @@ When an illegal move is attempted
 class Blocked(IllegalMove):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.label = "Blocked"
+        self.label = "Move is blocked"
 
 
 class Impossible(IllegalMove):
     def __init__(self, *args, **kwargs):
         super().__init__(*args,**kwargs)
-        self.label = "Impossible"
+        self.label = "Move is impossible"
         
 """
 Check announcements
@@ -98,4 +98,4 @@ class CheckMate(Check):
 class GameOver(RefereeOutput):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.label = "Game over! King was taken"
+        self.label = "Game over!"

@@ -2,9 +2,19 @@ from tkinter import *
 from ChessPiece import PieceFactory
 from easygui import filesavebox
 """
-This has some incredibly questionable OO programming.
-This was created as a quick and dirty tool.
-Proceed with caution...
+Basic GUI to create chessboards in the format:
+
+RNBQKBNR
+PPPPPPPP
+00000000
+00000000
+00000000
+00000000
+pppppppp
+rnbqkbnr
+
+Boards can be saved as text files and read into the kriegspiel application.
+
 """
 
 class BoardBuilder():
