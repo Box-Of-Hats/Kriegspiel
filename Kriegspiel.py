@@ -26,18 +26,23 @@ class Kriegspiel():
         board_layout, iterable, a board layout to load.
         use_symbols, bool, if pieces should use chess symbols (♔) or letters (K).
         """
-        self.board = Board()
+        
         self.players = {0: player_1,
                         1: player_2}
         self.use_symbols = use_symbols
         self.last_move = 1 #Who's move it was last
         self.referee = referee
         self.moves_made = 0
-        if not board_layout:
-            #If no board layout specified, load default starting chess board
-            self.load_game(DEFAULT_LAYOUT)
+
+        if isinstance(board_layout, Board):
+            self.board = board_layout
         else:
-            self.load_game(board_layout)
+            self.board = Board()
+            if not board_layout:
+                #If no board layout specified, load default starting chess board
+                self.load_game(DEFAULT_LAYOUT)
+            else:
+                self.load_game(board_layout)
 
     def print_board(self, show_key=True):
         self.board.print_board(show_key=show_key)
@@ -109,6 +114,7 @@ class Kriegspiel():
         #Check if the game is over:
         for player_id in [0,1]:
             if self.referee.is_game_over(player_id, self.board):
+                print(self.referee.is_game_over(player_id, self.board))
                 self.end_game(winner_id=Kriegspiel.opponent_id(player_id))
 
     def get_player(self, player_id):
@@ -202,12 +208,11 @@ def testing(c):
     t_board.load_board(c.board.save_board())
     t_board.print_board()
     echo=True
-    to_positions = [(7,0), (0,7), (0,3), (3,0), (0,0), (7,7), (3,3)]
-    f = (0,0)
+    to_positions = [(7,0), (0,7), (0,3), (3,0), (0,0), (7,7), (3,3), (7,3)]
+    f = (0,3)
     for pos in to_positions:
-        t_board 
         b = c.referee.is_path_blocked(f, pos, t_board, echo)
-        print("{} -> {} : {}".format(f, pos, b))
+        print("{} -> {} : is blocked? {}".format(f, pos, b))
 
                     
 if __name__ == "__main__":
@@ -277,7 +282,7 @@ if __name__ == "__main__":
         gamemode = "debug"
 
     #Initialise Chess game
-    c = Kriegspiel(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols)
-    c.load_game(layout)
+    c = Kriegspiel(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols, board_layout=layout)
+    #c.load_game(layout)
 
     game_modes[gamemode](c)

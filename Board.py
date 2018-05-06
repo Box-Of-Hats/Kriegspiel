@@ -1,6 +1,6 @@
 class Board():
-    def __init__(self, *args, **kwargs):
-        self.board = [[0 for x in range(8)] for y in range(8)]
+    def __init__(self, size=8, *args, **kwargs):
+        self.board = [[0 for x in range(size)] for y in range(size)]
 
     def add_piece(self, loc_x, loc_y, piece):
         """
