@@ -44,15 +44,15 @@ class Referee():
             if _from in cells_to_check:
                 cells_to_check.remove(_from)
         else:
-            print("Reached end of path checks...")
-            return False
+            #print("Reached end of path checks...")
+            return True #Normally this is set to False. Changed to True for testing.
 
         #Dont check current position:
         if _from in cells_to_check:
             cells_to_check.remove(_from)
         for i,j in cells_to_check:
             if not board.cell_is_free((i, j)):
-                print("Piece blocking in cell ({},{})".format(i,j))
+                print("[{}->{}] Piece blocking in cell ({},{})".format(_from,_to,i,j))
                 return True
         return False
 
@@ -113,6 +113,9 @@ class Referee():
         path_is_clear = True
         if echo: print("{}, can jump: {}".format(moving_piece, moving_piece.can_jump))
         if not moving_piece.can_jump:
+            if self.is_path_blocked(_from, _to, board):
+                return False
+            """
             if _from[1] > _to[1]:
                 y_range = list(range(_from[1], _to[1], -1))
             else:
@@ -151,6 +154,7 @@ class Referee():
             for i,j in cells_to_check:
                 if not board.cell_is_free((i, j)):
                     return False
+            """
 
         return True
 
@@ -209,7 +213,9 @@ class Referee():
 
     #testing new check mate function:
     def _is_in_check_mate(self, player_id, board, echo=False):
-        if self.is_in_check(player_id, board):
+        if not self.is_in_check(player_id, board):
+            return False
+        else:
             defending_pieces = {}
             #Find all of the pieces of the defending player
             for row_no, row in enumerate(board):
@@ -220,14 +226,15 @@ class Referee():
 
 
     def is_in_check_mate(self, player_id, board, echo=False):
-        #TODO: Make this take in a Board object and not a board array ??
         #Is a player in check?
         #Returns CheckMate ref output if true. False otherwise
+        #echo=True
         if echo: print(" ---- testing with board:")
         if echo: print(board)
         if echo: print("Doing check-mate test...")
         if self.is_in_check(player_id, board):
             if echo: print("  - is currently in check")
+            input("--")
             
             defending_pieces = {}
             #Find all of the pieces of the defending player
@@ -272,22 +279,28 @@ class Referee():
                     king_pos = (row_no, cell_no)
                     print("Found king: {}".format(king_pos))
 
+        print("Is game over?:")
+        print(" checkmate: {}".format(self.is_in_check_mate(player_id, board)))
+        print(" dead king: {}".format(not bool(king_pos)))
         return self.is_in_check_mate(player_id, board) or not bool(king_pos)
 
 
     def is_in_check(self, player_id, board, echo=False):
         #Is a player in check?
         king_pos = None
+        echo =True
         attacking_pieces = {}
         #Find the position of the king of the defending player and the positions of the attacking pieces
         for row_no, row in enumerate(board.board):
             for cell_no, cell in enumerate(row):
                 if isinstance(cell, King):
                     if cell.owner_id == player_id:
-                        king_pos = (row_no, cell_no)
+                        #king_pos = (row_no, cell_no)
+                        king_pos = (cell_no, row_no)
                 elif issubclass(type(cell), ChessPiece):
                     if cell.owner_id != player_id:
-                        attacking_pieces[cell] = (row_no, cell_no)
+                        #attacking_pieces[cell] = (row_no, cell_no)
+                        attacking_pieces[cell] = (cell_no, row_no)
 
 
         if not king_pos:
@@ -295,17 +308,20 @@ class Referee():
             return GameOver(for_player=player_id)
         for piece in attacking_pieces:
             #If a piece can attack the king's position, determine what type of check that is.
-            if piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
+            is_blocked = self.is_path_blocked(attacking_pieces[piece], king_pos, board)
+            #print("Is path blocked? {}->{} : {}".format(attacking_pieces[piece], king_pos, is_blocked))
+            if (not is_blocked) and piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
+                print("[{f}->{t}] Not blocked".format(f=attacking_pieces[piece], t=king_pos))
                 #Is it an knight putting you in check?
                 if isinstance(piece, Knight):
                     if echo: print("Knight check from: {}".format(piece))
                     return KnightCheck(for_player=player_id)
 
-                elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
+                elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
                     if echo: print("Row check from: {}".format(piece))
                     return RowCheck(for_player=player_id)
 
-                elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
+                elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
                     if echo: print("Column check from: {}".format(piece))
                     return ColumnCheck(for_player=player_id)
                 else:
@@ -318,6 +334,27 @@ class Referee():
     
     def is_move_legal(self, _from, _to, player_id, board, echo=False):
         return self._is_move_legal(_from, _to, player_id, board, echo=echo)
+    
+    def evaluate_state(self, board):
+        """
+        Evaluate a given state.
+        Return a dictionary of information about the current board.
+        """
+        p1_check = self.is_in_check(0, board)
+        p2_check = self.is_in_check(1, board)
+        p1_checkmate = self.is_in_check_mate(0, board)
+        p2_checkmate = self.is_in_check_mate(1, board)
+        p1_gameover = self.is_game_over(0, board)
+        p2_gameover = self.is_game_over(1, board)
+
+        return {
+            "p1_check": p1_check,
+            "p2_check": p2_check,
+            "p1_checkmate": p1_checkmate,
+            "p2_checkmate": p2_checkmate,
+            "p1_game_over": p1_gameover,
+            "p1_game_over": p2_gameover,
+        }
 
 """
 This ref is consorting with a player and allows them to cheat.
