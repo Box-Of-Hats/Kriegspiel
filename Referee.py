@@ -211,30 +211,14 @@ class Referee():
 
         return outputs
 
-    #testing new check mate function:
-    def _is_in_check_mate(self, player_id, board, echo=False):
-        if not self.is_in_check(player_id, board):
-            return False
-        else:
-            defending_pieces = {}
-            #Find all of the pieces of the defending player
-            for row_no, row in enumerate(board):
-                for cell_no, cell in enumerate(row):
-                    if issubclass(type(cell), ChessPiece):
-                        if cell.owner_id == player_id:
-                            defending_pieces[cell] = (cell_no, row_no)
-
-
     def is_in_check_mate(self, player_id, board, echo=False):
         #Is a player in check?
         #Returns CheckMate ref output if true. False otherwise
-        #echo=True
         if echo: print(" ---- testing with board:")
         if echo: print(board)
         if echo: print("Doing check-mate test...")
         if self.is_in_check(player_id, board):
             if echo: print("  - is currently in check")
-            input("--")
             
             defending_pieces = {}
             #Find all of the pieces of the defending player
@@ -277,18 +261,13 @@ class Referee():
             for cell_no, cell in enumerate(row):
                 if isinstance(cell, King) and cell.owner_id == player_id:
                     king_pos = (row_no, cell_no)
-                    print("Found king: {}".format(king_pos))
 
-        print("Is game over?:")
-        print(" checkmate: {}".format(self.is_in_check_mate(player_id, board)))
-        print(" dead king: {}".format(not bool(king_pos)))
         return self.is_in_check_mate(player_id, board) or not bool(king_pos)
 
 
     def is_in_check(self, player_id, board, echo=False):
         #Is a player in check?
         king_pos = None
-        echo =True
         attacking_pieces = {}
         #Find the position of the king of the defending player and the positions of the attacking pieces
         for row_no, row in enumerate(board.board):
@@ -302,7 +281,6 @@ class Referee():
                         #attacking_pieces[cell] = (row_no, cell_no)
                         attacking_pieces[cell] = (cell_no, row_no)
 
-
         if not king_pos:
             #If there is no king on the board, return true.
             return GameOver(for_player=player_id)
@@ -311,7 +289,6 @@ class Referee():
             is_blocked = self.is_path_blocked(attacking_pieces[piece], king_pos, board)
             #print("Is path blocked? {}->{} : {}".format(attacking_pieces[piece], king_pos, is_blocked))
             if (not is_blocked) and piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
-                print("[{f}->{t}] Not blocked".format(f=attacking_pieces[piece], t=king_pos))
                 #Is it an knight putting you in check?
                 if isinstance(piece, Knight):
                     if echo: print("Knight check from: {}".format(piece))
