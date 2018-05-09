@@ -13,7 +13,6 @@ class Referee():
     def is_path_blocked(self, _from, _to, board, echo=False):
         """
         Check if there are pieces in the way between two pieces.
-        DOESNT SEEM TO WORK??
         """
         if _from[1] > _to[1]:
             y_range = list(range(_from[1], _to[1], -1))
@@ -44,7 +43,6 @@ class Referee():
             if _from in cells_to_check:
                 cells_to_check.remove(_from)
         else:
-            #print("Reached end of path checks...")
             return True #Normally this is set to False. Changed to True for testing.
 
         #Dont check current position:
@@ -130,7 +128,6 @@ class Referee():
         next_board = Board()
         next_board.load_board(board.board)
         next_board.move_piece(_from, _to)
-        #next_board.print_board(show_key=True)
 
         if self.is_move_impossible(_from, _to, board=board, echo=echo):
             return [Impossible(for_player=player_id, from_cell=_from, to_cell=_to)]
@@ -147,16 +144,13 @@ class Referee():
 
         #Would put other player in check
         if self.is_in_check(Kriegspiel.opponent_id(player_id), next_board):
-            #return self.is_in_check(Kriegspiel.opponent_id(player_id), next_board.board)
             outputs.append(self.is_in_check(Kriegspiel.opponent_id(player_id), next_board))
 
         #Move is legal and a piece was taken:
         if isinstance(board.get_piece(_to), ChessPiece) and board.get_piece(_to) != next_board.get_piece(_to):
-            #return OkayTaken(for_player=player_name, additional_text=" - from cell {}".format(_to))
             outputs.append(OkayTaken(for_player=player_id, from_cell=_from, to_cell=_to, additional_text=" - from cell {}".format(_to)))
             outputs.append(OkayTaken(for_player=Kriegspiel.opponent_id(player_id), from_cell=_to, to_cell=_to, additional_text=" - from cell {}".format(_to)))
         else:
-            #return Okay(for_player=player_name)
             outputs.append(Okay(for_player=player_id, from_cell=_from, to_cell=_to))
 
         return outputs
@@ -193,10 +187,9 @@ class Referee():
                         temp_board.move_piece(current_pos, to_pos)
                         #If after that move, the player is no longer in check then it's not checkmate:
                         if not self.is_in_check(player_id, board=temp_board):
-                            #return CheckMate(for_player=player_id)
                             if echo: print("Found a way out of check. Move {}, {}->{}".format(cell, current_pos, to_pos))
                             return False
-            #return False
+
             return CheckMate(for_player=player_id)
         else:
             if echo: print("  - is not currently in check")
@@ -233,7 +226,7 @@ class Referee():
             return GameOver(for_player=player_id)
         for piece in attacking_pieces:
             #If a piece can attack the king's position, determine what type of check that is.
-            #This blocked-test may be redundant but I'm not touching it...
+            #This blocked-test may be redundant
             is_blocked = self.is_path_blocked(attacking_pieces[piece], king_pos, board)
 
             if (not is_blocked) and piece.is_legal_transform(attacking_pieces[piece], king_pos, attacking=True):
@@ -241,14 +234,15 @@ class Referee():
                 if isinstance(piece, Knight):
                     if echo: print("Knight check from: {}".format(piece))
                     return KnightCheck(for_player=player_id)
-
+                #Same row
                 elif attacking_pieces[piece][1] == king_pos[1] and attacking_pieces[piece][0] != king_pos[0]:
                     if echo: print("Row check from: {}".format(piece))
                     return RowCheck(for_player=player_id)
-
+                #Same column
                 elif attacking_pieces[piece][0] == king_pos[0] and attacking_pieces[piece][1] != king_pos[1]:
                     if echo: print("Column check from: {}".format(piece))
                     return ColumnCheck(for_player=player_id)
+                #Else, it's diagonal
                 else:
                     if echo: print("Diagonal check from: {}".format(piece))
                     return DiagonalCheck(for_player=player_id)
