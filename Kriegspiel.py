@@ -279,7 +279,7 @@ if __name__ == "__main__":
     if args.gamemode:
         gamemode = args.gamemode
     else:
-        gamemode = "debug"
+        gamemode = "pvp"
 
     #Initialise Chess game
     c = Kriegspiel(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols, board_layout=layout)
