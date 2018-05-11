@@ -180,9 +180,9 @@ def pvp(c):
 
     while True:
         c.do_move()
-        input("@{} Press enter once you've ready.".format(c.players[c.last_move].name))
+        input("@{} Press enter once you've ready to end your turn.".format(c.players[c.last_move].name))
         os.system(clear_cmd)
-        input("Press enter when you're ready >")
+        input("@{}, press enter when you're ready to take your turn\n>".format(c.players[Kriegspiel.opponent_id(c.last_move)].name))
 
 def debug(c):
     """Play chess with debug mode enabled. Prints out entire board after each move."""
