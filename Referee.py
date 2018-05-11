@@ -50,7 +50,7 @@ class Referee():
             cells_to_check.remove(_from)
         for i,j in cells_to_check:
             if not board.cell_is_free((i, j)):
-                print("[{}->{}] Piece blocking in cell ({},{})".format(_from,_to,i,j))
+                if echo: print("[{}->{}] Piece blocking in cell ({},{})".format(_from,_to,i,j))
                 return True
         return False
 
