@@ -2,10 +2,10 @@ from ChessPiece import ChessPiece, King, Knight
 from Board import Board
 from RefereeOutput import *
 from Kriegspiel import Kriegspiel
+
 """
 This ref is fair and does not allow any cheating in the game.
 """
-
 class Referee():
     def __init__(self,):
         pass
@@ -138,7 +138,6 @@ class Referee():
         #Would put other player in check mate
         if self.is_in_check_mate(Kriegspiel.opponent_id(player_id), next_board):
             if echo: print("Youre putting them in checkmate")
-            #return CheckMate(for_player=Kriegspiel.opponent_id(player_id))
             outputs.append(CheckMate(for_player=Kriegspiel.opponent_id(player_id)))
         #Move is legal:
 

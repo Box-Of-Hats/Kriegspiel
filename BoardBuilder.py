@@ -83,7 +83,7 @@ class BoardBuilder():
 
         Radiobutton(piece_frame, text="␡", variable=self.current_piece, value="0", font=font_choice).grid(row=8, column=0)
 
-        Button(piece_frame, text="Save", command= lambda: self.save_matrix(filesavebox(default='.\\*.lyt')), font=font_choice, relief="groove").grid(row=10, column=0, columnspan=2)
+        Button(piece_frame, text="Save", command= lambda: self.save_matrix(filesavebox(default='.\\*.txt')), font=font_choice, relief="groove").grid(row=10, column=0, columnspan=2)
         Button(piece_frame, text="Clear", command= lambda: self.clear(), font=("Courier", 10), relief="groove").grid(row=11, column=0, columnspan=2,)
 
         root.mainloop()

@@ -7,15 +7,6 @@ from Player import *
 from Referee import * 
 import argparse
 
-"""
-
-TODO: All outputs given to both players?
-TODO: Remove SavedOutput class from CheatAnalyser and make it the Object simply use the RefereeOutput.
-TODO: Differentiate between long/short diagonal check in Referee.
-TODO: Game thinks a player is in check, even if they arent. Seems to ignore any pieces that are in the path of attacking piece.
-"""
-
-
 DEFAULT_LAYOUT = ["rnbqkbnr".upper(), "pppppppp".upper(), [0]*8, [0]*8, [0]*8, [0]*8, "pppppppp", "rnbqkbnr"]
 
 class Kriegspiel():
@@ -201,18 +192,8 @@ def debug(c):
         c.do_move()
 
 def testing(c):
-    """Just used for testing various functions."""
-    #c.referee.verify_move((0,0), (0,1), c.board, 0)
-    c.board.print_board()
-    t_board = Board()
-    t_board.load_board(c.board.save_board())
-    t_board.print_board()
-    echo=True
-    to_positions = [(7,0), (0,7), (0,3), (3,0), (0,0), (7,7), (3,3), (7,3)]
-    f = (0,3)
-    for pos in to_positions:
-        b = c.referee.is_path_blocked(f, pos, t_board, echo)
-        print("{} -> {} : is blocked? {}".format(f, pos, b))
+    """Used for testing functions."""
+    pass
 
                     
 if __name__ == "__main__":
@@ -283,6 +264,6 @@ if __name__ == "__main__":
 
     #Initialise Chess game
     c = Kriegspiel(player_1=p1, player_2=p2, referee=referee, use_symbols=use_symbols, board_layout=layout)
-    #c.load_game(layout)
 
+    #Run the game in the chosen gamemode
     game_modes[gamemode](c)

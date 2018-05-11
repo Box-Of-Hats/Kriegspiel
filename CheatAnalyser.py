@@ -1,8 +1,3 @@
-"""
-Chess piece values from: 
-"Chess Fundamentals: Completely Revised and Updated for the 21st Century"
-    https://books.google.co.uk/books/about/Chess_Fundamentals.html?id=rDz8do_EDjkC
-"""
 #pylint: disable=W0614 
 from ChessPiece import *
 from RefereeOutput import *
@@ -46,8 +41,6 @@ class CheatAnalyser():
 
         return score
 
-    #def add_ref_output(self, output, moves_made, from_cell, to_cell):
-    #    self.ref_outputs.append(SavedOutput(output, moves_made, from_cell, to_cell))
     def add_ref_output(self, output, moves_made, echo=False):
         """
         Update the latest referee output object in the log with the number of moves made and the output
@@ -58,7 +51,6 @@ class CheatAnalyser():
                 self.ref_outputs[-1].output = output
                 self.ref_outputs[-1].moves_made = moves_made
             else:
-                #raise Exception("Big issue with ref output :/")
                 self.create_next_ref_output()
                 self.add_ref_output(output, moves_made, echo=echo)
         except IndexError:
@@ -67,8 +59,6 @@ class CheatAnalyser():
             self.create_next_ref_output()
             self.add_ref_output(output, moves_made, echo=echo)
 
-        
-        #print("Latest output: {}".format(self.ref_outputs))
         if echo:
             print("({}) Saved outputs:".format(self))
             print("  m#\tFrom\tTo\tOutput")

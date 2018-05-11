@@ -15,7 +15,7 @@ class PieceFactory():
 
     def create_piece(self, piece, colour, use_symbol):
         """
-        Colour must be explicitly stated.
+        Colour must be explicitly stated with either a 0 or 1, for white or black respectively.
         Piece must be specified with a LOWERCASE letter.
         Use_symbol is bool and decides if a piece is represented by a letter or a symbol.
         """
@@ -40,7 +40,8 @@ class ChessPiece():
         else:
             self.symbol = self.letters[colour]
 
-        if isinstance(self._moves, dict): #If moves are colour depenedant, moves should be a dict
+        #If moves are colour dependant, moves should be a dict
+        if isinstance(self._moves, dict): 
             self._moves = self._moves[colour]
         
         if not hasattr(self, "can_jump"):
@@ -155,11 +156,3 @@ class Bishop(ChessPiece):
         down_left = [(-a,-a) for a in range(0,8)]
         self._moves = list(itertools.chain(up_right, down_right, up_left, down_left))
         super().__init__(*args, **kwargs)
-
-if __name__ == "__main__":
-    factory = PieceFactory()
-    for t in list("pnkbqn"):
-        tmp = factory.create_piece(piece=t, use_symbol=True, colour=0)
-        print(tmp, tmp.name)
-    print(factory.letter_to_symbol("n", 1))
-    print(factory.letter_to_symbol("n", 0))
