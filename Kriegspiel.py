@@ -192,7 +192,10 @@ def debug(c):
         c.do_move()
 
 def testing(c):
-    """Used for testing functions."""
+    """
+    Used for testing.
+    Add code here and run the game in gamemode "testing" to run this code.
+    """
     pass
 
                     
